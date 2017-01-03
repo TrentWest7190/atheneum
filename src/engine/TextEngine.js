@@ -1,13 +1,3 @@
-function parseParagraph (paragraphObj) {
-  let preparedParagraph = rawParagraphToPreparedParagraph(paragraphObj)
-  let returnParagraph = preparedParagraphToArray(preparedParagraph)
-  return returnParagraph
-}
-
-function rawParagraphToPreparedParagraph (raw) {
-  return raw
-}
-
 function preparedParagraphToArray (paragraph) {
   let returnArray = []
   let styleRegex = /(\*.+?\*|\/.+?\/)|\w+?|\s+?/g
@@ -15,7 +5,7 @@ function preparedParagraphToArray (paragraph) {
   let nonstyledCollector = ''
 
   /* eslint-disable no-cond-assign */
-  while (results = styleRegex.exec(paragraph)) {
+  while (results = styleRegex.exec(paragraph.textContent(playerState))) {
     if (typeof results[1] === 'undefined') {
       nonstyledCollector += results[0]
     } else {
@@ -30,4 +20,10 @@ function preparedParagraphToArray (paragraph) {
   return returnArray
 }
 
-export default parseParagraph
+const playerState = {
+  flags: {
+    testFlag: true
+  }
+}
+
+export default preparedParagraphToArray
