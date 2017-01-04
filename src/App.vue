@@ -1,35 +1,61 @@
 <template>
   <div id="app-container" class="full-height row-flex">
-    <div class="bordered-box full-height col-md-3">hey bro</div>
-    <div class="bordered-box col-flex full-height col-md-6">
-      <text-view class="bordered-box col-md-8" :textArray="testArray"></text-view>
+    <div class="bordered-box full-height col-md-3">
+      <debug-view class=" bordered-box full-height" :Player="Player"></debug-view>
     </div>
-    <div class="bordered-box full-height col-md-3">hey bro</div>
+    <div class="bordered-box col-flex full-height col-md-6">
+      <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
+      <button-view class="bordered-box col-md-4" :buttonArray="buttons" @doEvents="EventEngine.delegateEvents"></button-view>
+    </div>
+    <div class="bordered-box full-height col-md-3">
+      <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
+    </div>
   </div>
 </template>
 
 <script>
 import TextView from './components/TextView'
-import TextEngine from './engine/TextEngine'
+import ButtonView from './components/ButtonView'
+import DebugView from './components/DebugView'
+import InventoryView from './components/InventoryView'
 
-console.log(TextEngine('loesjfo sjeff jis jfsd fisjdfjisdfijsjdif sfidjsidfjsidfj sidfj sdfijsdi fsdfjsidfj sidfjsi df'))
+import TextEngine from './engine/TextEngine'
+import Player from './engine/Player'
+import EventEngine from './engine/EventEngine'
 
 export default {
   name: 'app',
+  props: ['Story'],
   components: {
-    TextView
+    TextView,
+    ButtonView,
+    DebugView,
+    InventoryView
   },
 
   data () {
     return {
-      testArray: [
-        [
-          {
-            content: 'hey',
-            style: 'bold'
-          }
-        ]
-      ]
+      Player: Player,
+      EventEngine: EventEngine
+    }
+  },
+
+  computed: {
+    paragraphs () {
+      let paragraphs = this.Story.screenData[this.Player.CurrentLocation].paragraphs.concat(this.Player.additionalParagraphs)
+      return paragraphs.map(paragraphObj => {
+        if (typeof paragraphObj === 'string') {
+          return TextEngine(this.Story.textData[paragraphObj])
+        } else if (paragraphObj.condition(Player.State)) {
+          return TextEngine(this.Story.textData[paragraphObj.name])
+        }
+      }, this).filter(paragraph => typeof paragraph !== 'undefined')
+    },
+
+    buttons () {
+      return this.Story.screenData[this.Player.CurrentLocation].buttons.map(buttonObj => {
+        return this.Story.buttonData[buttonObj]
+      }, this)
     }
   }
 }
@@ -59,7 +85,7 @@ body, html {
 }
 
 .col-md-8 {
-  flex-basis: 64.66%;
+  flex-basis: 66.66%;
 }
 
 .col-md-7 {
@@ -68,6 +94,10 @@ body, html {
 
 .col-md-6 {
   flex-basis: 50%;
+}
+
+.col-md-4 {
+  flex-basis: 33.33%
 }
 
 .col-md-3 {
