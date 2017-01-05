@@ -20,7 +20,6 @@ import DebugView from './components/DebugView'
 import InventoryView from './components/InventoryView'
 
 import TextEngine from './engine/TextEngine'
-import Player from './engine/Player'
 import EventEngine from './engine/EventEngine'
 
 export default {
@@ -45,7 +44,7 @@ export default {
       return paragraphs.map(paragraphObj => {
         if (typeof paragraphObj === 'string') {
           return TextEngine(this.Story.textData[paragraphObj])
-        } else if (paragraphObj.condition(Player.State)) {
+        } else if (paragraphObj.condition()) {
           return TextEngine(this.Story.textData[paragraphObj.name])
         }
       }, this).filter(paragraph => typeof paragraph !== 'undefined')
@@ -78,7 +77,7 @@ export default {
         else if (typeof buttonObj === 'string') {
           return this.Story.buttonData[buttonObj] // Use the reference to the object
         }
-      }, this)
+      }, this).filter(button => typeof button !== 'undefined')
     }
   }
 }

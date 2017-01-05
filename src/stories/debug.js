@@ -14,7 +14,7 @@ const textData = {
 
   paragraph_2: {
     textContent () {
-      return `${this.replacements.isTestFlagTrue}`
+      return `${this.replacements.isTestFlagTrue()}`
     },
 
     replacements: {
