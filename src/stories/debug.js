@@ -1,38 +1,27 @@
-const statData = {
-  testStat: {
-    defaultValue: 0,
-    onSet (value, PlayerState) {
-      if (PlayerState.flags.testFlag) {
-        return value + 100
-      } else {
-        return value
-      }
-    },
-    onGet (value, PlayerState) {
-      if (PlayerState.flags.testFlag) {
-        return value * 2
-      } else {
-        return value
-      }
-    }
-  }
-}
+import Player from '../engine/Player'
+
+/* eslint-disable no-unused-vars */
+let Flags = Player.State.flags
+let Inventory = Player.State.inventory
+let Stats = Player.State.stats
 
 const textData = {
   paragraph_1: {
-    textContent (playerState) {
-      return `this just a test ${this.replacements.chunkert(playerState)}
-      ${this.replacements.statTest(playerState)}`
+    textContent () {
+      return `this just a test ${this.replacements.chunkert()}
+      ${this.replacements.statTest()}`
     },
 
     replacements: {
-      chunkert (playerState) {
-        return playerState.flags.testFlag ? 'hoo hoo' : 'haa haa'
+      chunkert () {
+        return Flags.testFlag ? 'hoo hoo' : 'haa haa'
       },
 
-      statTest (playerState) {
-        if (statData.testStat.onGet(playerState.stats.testStat, playerState) > 100) {
+      statTest () {
+        if (Stats.testStat.value > 100) {
           return 'stat is over 100'
+        } else if (Stats.testStat.value === 100) {
+          return 'stat is 100'
         } else {
           return 'stat is under 100'
         }
@@ -181,7 +170,7 @@ const screenData = {
 
 const flagData = {
   testFlag: false,
-  testString: "grunk",
+  testString: 'grunk',
   testNumber: 100
 }
 
@@ -191,9 +180,30 @@ const itemData = {
   }
 }
 
+const statData = {
+  testStat: {
+    _value: 0,
+    get value () {
+      if (Flags.testFlag) {
+        return this._value + 100
+      }
+      return this._value
+    },
+    set value (newValue) {
+      if (Flags.testFlag) {
+        this._value + newValue + 10
+      } else {
+        this._value + newValue
+      }
+    }
+  }
+}
+
 const config = {
   startScreenId: 'screen_1'
 }
+
+Player.Setup(flagData, itemData, statData)
 
 exports.textData = textData
 

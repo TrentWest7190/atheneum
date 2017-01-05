@@ -16,7 +16,7 @@ EventEngine.getItem = function (target) {
 }
 
 EventEngine.setStat = function (target) {
-  Player.Functions.setStat(target.statName, Player.State.stats[target.statName]._onSet(target.statValue, Player.State))
+  Player.Functions.setStat(target.statName, target.statValue)
 }
 
 EventEngine.appendText = function (paragraphId) {
@@ -24,7 +24,11 @@ EventEngine.appendText = function (paragraphId) {
 }
 
 EventEngine.delegateEvents = function (eventArray) {
-  eventArray.forEach(event => EventEngine[event.name](event.target), this)
+  eventArray.forEach(event => {
+    if (typeof event.condition === 'undefined' || event.condition()) {
+      EventEngine[event.name](event.target)
+    }
+  }, this)
 }
 
 const operations = {

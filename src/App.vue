@@ -25,7 +25,7 @@ import EventEngine from './engine/EventEngine'
 
 export default {
   name: 'app',
-  props: ['Story'],
+  props: ['Story', 'Player'],
   components: {
     TextView,
     ButtonView,
@@ -35,7 +35,6 @@ export default {
 
   data () {
     return {
-      Player: Player,
       EventEngine: EventEngine
     }
   },
