@@ -85,11 +85,11 @@ export default {
 </script>
 
 <style>
-@import url(https://fonts.googleapis.com/css?family=Space+Mono);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata);
 body, html {
   height: 100vh;
   margin: 0px;
-  font-family: 'Space Mono';
+  font-family: 'Inconsolata', monospace;
 }
 
 #app-container {
