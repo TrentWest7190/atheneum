@@ -8,55 +8,56 @@ let Stats = Player.State.stats
 const textData = {
   paragraph_1: {
     textContent () {
-      return `this just a test ${this.replacements.chunkert()}
-      ${this.replacements.statTest()}`
-    },
-
-    replacements: {
-      chunkert () {
-        return Flags.testFlag ? 'hoo hoo' : 'haa haa'
-      },
-
-      statTest () {
-        if (Stats.testStat.value > 100) {
-          return 'stat is over 100'
-        } else if (Stats.testStat.value === 100) {
-          return 'stat is 100'
-        } else {
-          return 'stat is under 100'
-        }
-      }
+      return `The first test string.`
     }
   },
 
   paragraph_2: {
     textContent () {
-      return `the second text`
+      return `${this.replacements.isTestFlagTrue}`
+    },
+
+    replacements: {
+      isTestFlagTrue () {
+        return Flags.testFlag ? 'the flag is true' : 'the flag is false'
+      }
     }
   },
 
   paragraph_3: {
     textContent () {
-      return `this shows up if testFlag is true`
+      return `funt`
     }
   },
 
   paragraph_4: {
     textContent (playerState) {
-      return `${playerState.flags.testString}`
+      return `the horn room`
     }
   },
 
   paragraph_5: {
     textContent () {
-      return `the horn room part deux`
+      return `dodooooooot`
+    }
+  },
+
+  paragraph_6: {
+    textContent () {
+      return `a input box go here eventually`
+    }
+  },
+
+  paragraph_7: {
+    textContent () {
+      return `${Flags.favColor}`
     }
   }
 }
 
 const buttonData = {
   button_1: {
-    text: 'test',
+    text: 'go forward',
     events: [
       {
         name: 'loadScreen',
@@ -65,7 +66,16 @@ const buttonData = {
     ]
   },
   button_2: {
-    text: 'set testFlag true',
+    text: 'go back',
+    events: [
+      {
+        name: 'loadScreen',
+        target: 'screen_1'
+      }
+    ]
+  },
+  button_3: {
+    text: 'activate flag',
     events: [
       {
         name: 'setFlag',
@@ -77,70 +87,49 @@ const buttonData = {
       }
     ]
   },
-  button_2_plus: {
-    text: 'plus',
+  button_4: {
+    text: 'show up'
+  },
+  button_5: {
+    text: 'counter is equal'
+  },
+  button_6: {
+    text: 'counter is less'
+  },
+  button_7: {
+    text: 'counter is greater'
+  },
+  button_8: {
+    text: '3rd screen',
+    events: [
+      {
+        type: 'loadScreen',
+        target: 'screen_3'
+      }
+    ]
+  },
+  button_9: {
+    text: 'increase counter by 1',
     events: [
       {
         name: 'setFlag',
         target: {
-          flagName: 'testNumber',
+          flagName: 'testCounter',
           operation: 'plus',
-          flagValue: 1
+          value: 1
         }
       }
     ]
   },
-  button_2_minus: {
-    text: 'minus',
+  button_10: {
+    text: 'decrease counter by 1',
     events: [
       {
         name: 'setFlag',
         target: {
-          flagName: 'testNumber',
+          flagName: 'testCounter',
           operation: 'minus',
-          flagValue: 1
-        }
-      }
-    ]
-  },
-  button_2_toggle: {
-    text: 'toggle',
-    events: [
-      {
-        name: 'setFlag',
-        target: {
-          flagName: 'testFlag',
-          operation: 'toggle'
-        }
-      }
-    ]
-  },
-  button_3: {
-    text: 'add a new paragraph',
-    event: 'appendText',
-    target: 'paragraph_2'
-  },
-  get_horn: {
-    text: 'get a horn',
-    events: [
-      {
-        name: 'getItem',
-        target: {
-          itemName: 'horn',
-          amount: 1
-        }
-      }
-    ]
-  },
-  addStat: {
-    text: 'add stat',
-    events: [
-      {
-        name: 'setStat',
-        target: {
-          statName: 'testState',
-          operation: 'plus',
-          statValue: 10
+          value: 1
         }
       }
     ]
@@ -150,21 +139,46 @@ const buttonData = {
 const screenData = {
   screen_1: {
     paragraphs: [
-      'paragraph_1',
-      {
-        name: 'paragraph_3',
-        condition (playerState) {
-          return playerState.flags.testFlag
-        }
-      },
-      'paragraph_4'
+      'paragraph_1'
     ],
-    buttons: ['button_1', 'button_2', 'button_2_minus', 'button_2_plus', 'button_2_toggle', 'addStat']
+    buttons: [
+      'button_1',
+      'button_3'
+    ]
   },
 
   screen_2: {
-    paragraphs: ['paragraph_5'],
-    buttons: ['get_horn']
+    paragraphs: ['paragraph_2'],
+    buttons: [
+      'button_2',
+      {
+        name: 'button_4',
+        condition () {
+          return Flags.testFlag
+        }
+      },
+      'button_8'
+    ]
+  },
+
+  screen_3: {
+    paragraphs: [
+      {
+        name: 'paragraph_3',
+        condition () {
+          return Flags.testCounter > 8 && Flags.testCounter < 12
+        }
+      }
+    ],
+
+    buttons: [
+      {
+        name: 'button_5',
+        condition () {
+          return Flags.testCounter === 10
+        }
+      }
+    ]
   }
 }
 

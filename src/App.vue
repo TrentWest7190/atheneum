@@ -51,9 +51,33 @@ export default {
       }, this).filter(paragraph => typeof paragraph !== 'undefined')
     },
 
+    /* eslint-disable brace-style */
     buttons () {
       return this.Story.screenData[this.Player.CurrentLocation].buttons.map(buttonObj => {
-        return this.Story.buttonData[buttonObj]
+        // Case 1: button is an object with a condition
+        if (typeof buttonObj.condition !== 'undefined') {
+          const conditionType = typeof buttonObj.condition()
+          // Case 1-1: button is an object with a condition that returns the name of a button
+          if (conditionType === 'string') {
+            return this.Story.buttonData[buttonObj.condition()] // Use the reference to return the button
+          }
+          // Case 1-2: button is an object with a condition that returns an actual button object (hopefully)
+          else if (conditionType === 'object') {
+            return buttonObj.condition() // Use the returned button itself
+          }
+          // Case 1-3: button is an object with a condition that returns a boolean
+          else if (conditionType === 'boolean') {
+            return buttonObj.condition() ? this.Story.buttonData[buttonObj.name] : undefined // Use the reference to the button if condition passes
+          }
+        }
+        // Case 2: button is an object with no condition
+        else if (typeof buttonObj === 'object') {
+          return buttonObj // Use the object
+        }
+        // Case 3: button is a string
+        else if (typeof buttonObj === 'string') {
+          return this.Story.buttonData[buttonObj] // Use the reference to the object
+        }
       }, this)
     }
   }
