@@ -1,13 +1,13 @@
 import Player from './Player'
 
-let EventEngine = {}
+const EventEngine = {}
 
 EventEngine.loadScreen = function (screenName) {
   Player.Functions.movePlayer(screenName)
 }
 
 EventEngine.setFlag = function (target) {
-  let newValue = operations[target.operation](Player.State.flags[target.flagName], target.flagValue)
+  const newValue = operations[target.operation](Player.State.flags[target.flagName], target.flagValue)
   Player.Functions.setFlag(target.flagName, newValue)
 }
 

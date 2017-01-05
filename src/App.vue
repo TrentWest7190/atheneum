@@ -41,7 +41,7 @@ export default {
 
   computed: {
     paragraphs () {
-      let paragraphs = this.Story.screenData[this.Player.CurrentLocation].paragraphs.concat(this.Player.additionalParagraphs)
+      const paragraphs = this.Story.screenData[this.Player.CurrentLocation].paragraphs.concat(this.Player.additionalParagraphs)
       return paragraphs.map(paragraphObj => {
         if (typeof paragraphObj === 'string') {
           return TextEngine(this.Story.textData[paragraphObj])
