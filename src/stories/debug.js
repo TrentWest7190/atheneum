@@ -16,7 +16,6 @@ const textData = {
     textContent () {
       return `${this.replacements.isTestFlagTrue()}`
     },
-
     replacements: {
       isTestFlagTrue () {
         return Flags.testFlag ? 'the flag is true' : 'the flag is false'
@@ -62,46 +61,84 @@ const buttonData = {
       Player.CurrentLocation = 'screen_2'
     }
   },
+
   button_2: {
     text: 'go back',
     events () {
       Player.CurrentLocation = 'screen_1'
     }
   },
+
   button_3: {
     text: 'activate flag',
     events () {
       Flags.testFlag = true
     }
   },
+
   button_4: {
     text: 'show up'
   },
+
   button_5: {
     text: 'counter is equal'
   },
+
   button_6: {
     text: 'counter is less'
   },
+
   button_7: {
     text: 'counter is greater'
   },
+
   button_8: {
     text: '3rd screen',
     events () {
       Player.CurrentLocation = 'screen_3'
     }
   },
+
   button_9: {
     text: 'increase counter by 1',
     events () {
       Flags.testCounter += 1
     }
   },
+
   button_10: {
     text: 'decrease counter by 1',
     events () {
       Flags.testCounter -= 1
+    }
+  },
+
+  button_11: {
+    text: 'pick up horn',
+    events () {
+      Inventory.horn += 1
+    }
+  },
+
+  button_12: {
+    text: 'play horn',
+    events () {
+      Player.additionalParagraphs.push('paragraph_5')
+    }
+  },
+
+  button_13: {
+    text: 'drop horn',
+    events () {
+      Inventory.horn = 0
+    }
+  },
+
+  button_16: {
+    text: 'bash horn',
+    events () {
+      Inventory.horn -= 1
+      Player.additionalParagraphs.push('You pound out the horn into a fine mist')
     }
   }
 }
@@ -140,7 +177,6 @@ const screenData = {
         }
       }
     ],
-
     buttons: [
       {
         name: 'button_5',
@@ -150,6 +186,33 @@ const screenData = {
       },
       'button_9',
       'button_10'
+    ]
+  },
+
+  screen_4: {
+    paragraphs: [
+      'paragraph_4'
+    ],
+    buttons: [
+      'button_11',
+      {
+        name: 'button_12',
+        condition () {
+          return Inventory.horn > 0
+        }
+      },
+      {
+        name: 'button_13',
+        condition () {
+          return Inventory.horn > 0
+        }
+      },
+      {
+        name: 'button_16',
+        condition () {
+          return Inventory.horn > 0
+        }
+      }
     ]
   }
 }

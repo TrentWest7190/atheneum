@@ -1,5 +1,3 @@
-import Player from './Player'
-
 function preparedParagraphToArray (paragraph) {
   let returnArray = []
   let styleRegex = /(\*.+?\*|\/.+?\/)|\w+?|\s+?/g
@@ -7,7 +5,7 @@ function preparedParagraphToArray (paragraph) {
   let nonstyledCollector = ''
 
   /* eslint-disable no-cond-assign */
-  while (results = styleRegex.exec(paragraph.textContent(Player.State))) {
+  while (results = styleRegex.exec(paragraph.textContent())) {
     if (typeof results[1] === 'undefined') {
       nonstyledCollector += results[0]
     } else {
