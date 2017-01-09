@@ -5,7 +5,7 @@
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
-      <button-view class="bordered-box col-md-4" :buttonArray="buttons"></button-view>
+      <button-view class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
@@ -32,9 +32,12 @@ export default {
   },
 
   computed: {
+    scene () {
+      return this.Story.screenData[this.Player.CurrentLocation]
+    },
     /* eslint-disable brace-style */
     paragraphs () {
-      const paragraphs = this.Story.screenData[this.Player.CurrentLocation].paragraphs.concat(this.Player.additionalParagraphs)
+      const paragraphs = this.scene.paragraphs.concat(this.Player.additionalParagraphs)
       return paragraphs.map(paragraphObj => {
         // Case 1: paragraph is an object with a condition
         if (typeof paragraphObj.condition !== 'undefined') {
@@ -79,7 +82,8 @@ export default {
     },
 
     buttons () {
-      return this.Story.screenData[this.Player.CurrentLocation].buttons.map(buttonObj => {
+      const buttons = this.Player.buttonOverride.length > 0 ? this.Player.buttonOverride : this.scene.buttons
+      const finalButtons = buttons.map(buttonObj => {
         // Case 1: button is an object with a condition
         if (typeof buttonObj.condition !== 'undefined') {
           const conditionType = typeof buttonObj.condition()
@@ -105,6 +109,22 @@ export default {
           return this.Story.buttonData[buttonObj] // Use the reference to the object
         }
       }, this).filter(button => typeof button !== 'undefined')
+
+      if (buttons._parent) {
+        Object.defineProperty(finalButtons, '_parent', {value: buttons._parent})
+      }
+
+      return finalButtons
+    }
+  },
+
+  methods: {
+    replaceButtons (children, orig) {
+      let newButtons = children
+      if (!newButtons._parent) {
+        Object.defineProperty(newButtons, '_parent', {value: orig})
+      }
+      this.Player.buttonOverride = newButtons
     }
   }
 }

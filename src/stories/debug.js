@@ -217,6 +217,25 @@ const screenData = {
         }
       }
     ]
+  },
+
+  button_tree: {
+    paragraphs: [
+      'button tree stuff'
+    ],
+    buttons: [
+      {
+        text: 'look',
+        children: [
+          {
+            text: 'sand',
+            events () {
+              Player.additionalParagraphs.push(`that's some sand`)
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 
