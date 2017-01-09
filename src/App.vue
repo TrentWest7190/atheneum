@@ -5,7 +5,7 @@
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
-      <button-view class="bordered-box col-md-4" :buttonArray="buttons" @doEvents="EventEngine.delegateEvents"></button-view>
+      <button-view class="bordered-box col-md-4" :buttonArray="buttons"></button-view>
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
@@ -20,7 +20,6 @@ import DebugView from './components/DebugView'
 import InventoryView from './components/InventoryView'
 
 import TextEngine from './engine/TextEngine'
-import EventEngine from './engine/EventEngine'
 
 export default {
   name: 'app',
@@ -30,12 +29,6 @@ export default {
     ButtonView,
     DebugView,
     InventoryView
-  },
-
-  data () {
-    return {
-      EventEngine: EventEngine
-    }
   },
 
   computed: {

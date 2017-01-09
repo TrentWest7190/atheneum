@@ -31,7 +31,7 @@ const textData = {
   },
 
   paragraph_4: {
-    textContent (playerState) {
+    textContent () {
       return `the horn room`
     }
   },
@@ -58,34 +58,21 @@ const textData = {
 const buttonData = {
   button_1: {
     text: 'go forward',
-    events: [
-      {
-        name: 'loadScreen',
-        target: 'screen_2'
-      }
-    ]
+    events () {
+      Player.CurrentLocation = 'screen_2'
+    }
   },
   button_2: {
     text: 'go back',
-    events: [
-      {
-        name: 'loadScreen',
-        target: 'screen_1'
-      }
-    ]
+    events () {
+      Player.CurrentLocation = 'screen_1'
+    }
   },
   button_3: {
     text: 'activate flag',
-    events: [
-      {
-        name: 'setFlag',
-        target: {
-          flagName: 'testFlag',
-          operation: 'set',
-          flagValue: true
-        }
-      }
-    ]
+    events () {
+      Flags.testFlag = true
+    }
   },
   button_4: {
     text: 'show up'
@@ -101,38 +88,21 @@ const buttonData = {
   },
   button_8: {
     text: '3rd screen',
-    events: [
-      {
-        type: 'loadScreen',
-        target: 'screen_3'
-      }
-    ]
+    events () {
+      Player.CurrentLocation = 'screen_3'
+    }
   },
   button_9: {
     text: 'increase counter by 1',
-    events: [
-      {
-        name: 'setFlag',
-        target: {
-          flagName: 'testCounter',
-          operation: 'plus',
-          value: 1
-        }
-      }
-    ]
+    events () {
+      Flags.testCounter += 1
+    }
   },
   button_10: {
     text: 'decrease counter by 1',
-    events: [
-      {
-        name: 'setFlag',
-        target: {
-          flagName: 'testCounter',
-          operation: 'minus',
-          value: 1
-        }
-      }
-    ]
+    events () {
+      Flags.testCounter -= 1
+    }
   }
 }
 
@@ -177,7 +147,9 @@ const screenData = {
         condition () {
           return Flags.testCounter === 10
         }
-      }
+      },
+      'button_9',
+      'button_10'
     ]
   }
 }
@@ -185,7 +157,7 @@ const screenData = {
 const flagData = {
   testFlag: false,
   testString: 'grunk',
-  testNumber: 100
+  testCounter: 10
 }
 
 const itemData = {
@@ -217,7 +189,7 @@ const config = {
   startScreenId: 'screen_1'
 }
 
-Player.Setup(flagData, itemData, statData)
+Player.Setup(flagData, itemData, statData, config.startScreenId)
 
 exports.textData = textData
 

@@ -25,7 +25,9 @@ EventEngine.appendText = function (paragraphId) {
 
 EventEngine.delegateEvents = function (eventArray) {
   eventArray.forEach(event => {
-    if (typeof event.condition === 'undefined' || event.condition()) {
+    if (typeof event === 'function') {
+      event()
+    } else if (typeof event.condition === 'undefined' || event.condition()) {
       EventEngine[event.name](event.target)
     }
   }, this)

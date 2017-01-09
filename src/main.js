@@ -6,8 +6,6 @@ import Player from './engine/Player'
 
 let Story = require('./stories/debug.js')
 
-Player.Functions.movePlayer(Story.config.startScreenId)
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

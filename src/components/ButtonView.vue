@@ -1,6 +1,6 @@
 <template>
   <div class = "row-flex flex-wrap">
-    <button class="event-button" v-for="button in buttonArray" @click="$emit('doEvents', button.events)">{{ button.text }}</button>
+    <button class="event-button" v-for="button in buttonArray" @click="button.events">{{ button.text }}</button>
   </div>
 </template>
 
