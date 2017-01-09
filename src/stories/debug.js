@@ -81,15 +81,18 @@ const buttonData = {
   },
 
   button_5: {
-    text: 'counter is equal'
+    text: 'counter is equal',
+    events () {}
   },
 
   button_6: {
-    text: 'counter is less'
+    text: 'counter is less',
+    events () {}
   },
 
   button_7: {
-    text: 'counter is greater'
+    text: 'counter is greater',
+    events () {}
   },
 
   button_8: {

@@ -1,5 +1,9 @@
 <template>
   <div class="col-flex">
+    <h2>Screens</h2>
+    <select @change="Player.CurrentLocation = $event.target.value">
+      <option v-for="(screen, screenName) in Story.screenData" :value="screenName">{{ screenName }}</option>
+    </select>
     <h2>Flags</h2>
     <div class="row-flex debug-row" v-for="(flag, flagName) in Player.State.flags">
       <span>{{ flagName }}</span>
@@ -25,7 +29,7 @@
 export default {
   name: 'debug-view',
 
-  props: ['Player'],
+  props: ['Story', 'Player'],
 
   methods: {
     updatePlayer (attributeName, flagName, flagValue, isNumber) {
@@ -34,6 +38,10 @@ export default {
       } else {
         this.Player.State.stats[flagName]._value = parseInt(flagValue)
       }
+    },
+
+    test (input) {
+      console.log(input)
     }
   }
 }

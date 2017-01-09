@@ -1,7 +1,7 @@
 <template>
   <div id="app-container" class="full-height row-flex">
     <div class="bordered-box full-height col-md-3">
-      <debug-view class=" bordered-box full-height" :Player="Player"></debug-view>
+      <debug-view class=" bordered-box full-height" :Story="Story" :Player="Player"></debug-view>
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
@@ -57,7 +57,7 @@ export default {
           }
           // Case 1-3: condition returns a boolean
           else if (conditionType === 'boolean') {
-            return paragraphObj.condition() ? this.Story.textData[paragraphObj.name] : undefined
+            return paragraphObj.condition() ? TextEngine(this.Story.textData[paragraphObj.name]) : undefined
           }
         }
         // Case 2: paragraph is an object with no condition
