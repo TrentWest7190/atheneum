@@ -143,6 +143,18 @@ const buttonData = {
       Inventory.horn -= 1
       Player.additionalParagraphs.push('You pound out the horn into a fine mist')
     }
+  },
+
+  button_17: {
+    text: 'boolean true'
+  },
+
+  button_18: {
+    text: 'return string'
+  },
+
+  button_19: {
+    text: 'raw string'
   }
 }
 
@@ -221,17 +233,67 @@ const screenData = {
 
   button_tree: {
     paragraphs: [
-      'button tree stuff'
+      'all button types'
     ],
     buttons: [
+      {
+        name: 'button_17',
+        condition () {
+          return true
+        }
+      },
+      {
+        text: 'boolean true fullobj',
+        condition () {
+          return true
+        }
+      },
+      {
+        condition () {
+          return 'button_18'
+        }
+      },
+      {
+        condition () {
+          return { text: 'return object' }
+        }
+      },
+      {
+        text: 'raw button'
+      },
+      'button_19',
       {
         text: 'look',
         children: [
           {
-            text: 'sand',
-            events () {
-              Player.additionalParagraphs.push(`that's some sand`)
+            text: 'dont show',
+            condition () {
+              return false
             }
+          }
+        ]
+      },
+      {
+        text: 'dubfdf',
+        children: [
+          {
+            text: 'hey',
+            children: [
+              {
+                text: 'hi'
+              },
+              {
+                text: 'nonoshow',
+                children: [
+                  {
+                    text: 'noshow',
+                    condition () {
+                      return false
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -247,7 +309,8 @@ const flagData = {
 
 const itemData = {
   horn: {
-    text: 'A funny horn'
+    text: 'A funny horn',
+    categories: ['usable']
   }
 }
 
@@ -271,7 +334,7 @@ const statData = {
 }
 
 const config = {
-  startScreenId: 'screen_1'
+  startScreenId: 'button_tree'
 }
 
 Player.Setup(flagData, itemData, statData, config.startScreenId)
