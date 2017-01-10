@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import Player from './engine/Player'
 
-let Story = require('./stories/thydungeon.js')
+let Story = require('./stories/combat.js')
 
 /* eslint-disable no-new */
 new Vue({

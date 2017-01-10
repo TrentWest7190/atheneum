@@ -15,7 +15,8 @@ let Player = {
   },
   additionalParagraphs: [],
   buttonOverride: [],
-  paragarphOverride: []
+  paragarphOverride: [],
+  currentEnemy: {}
 }
 
 Vue.set(Player.State, 'flags', {})
@@ -53,6 +54,7 @@ Player.Setup = function (flagData, itemData, statData, moveTo) {
 
   Vue.set(Player, 'additionalParagraphs', [])
   Vue.set(Player, 'CurrentLocation', moveTo)
+  Vue.set(Player, 'currentEnemy', {})
 }
 
 export default Player

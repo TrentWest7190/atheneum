@@ -38,10 +38,6 @@ export default {
       } else {
         this.Player.State.stats[flagName]._value = parseInt(flagValue)
       }
-    },
-
-    test (input) {
-      console.log(input)
     }
   }
 }

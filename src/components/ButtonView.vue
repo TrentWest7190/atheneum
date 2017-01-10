@@ -9,12 +9,18 @@
 export default {
   name: 'button-view',
 
-  props: ['buttonArray'],
+  props: ['buttonArray', 'inCombat'],
 
   methods: {
     handleEvents (button) {
       if (button.events) {
+        if (this.inCombat) {
+          this.$emit('clearAddtParas')
+        }
         button.events()
+        if (this.inCombat) {
+          this.$emit('enemyTurn')
+        }
       }
       if (button.children) {
         this.$emit('replaceButtons', button.children, this.buttonArray)
