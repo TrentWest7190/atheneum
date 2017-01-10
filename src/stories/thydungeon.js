@@ -45,9 +45,6 @@ const screenData = {
               } else {
                 Player.paragraphOverride = [`Ye doth suffer from memory loss. YE SCROLL is no more. Honestly`]
               }
-            },
-            condition () {
-              return Flags.scrollThere
             }
           },
           {
@@ -137,6 +134,127 @@ const screenData = {
         ]
       }
     ]
+  },
+
+  south: {
+    paragraphs: [
+      `You head south to an enbankment. Or maybe a chasm. You can't decide which. Anyway, ye spies a TRINKET. Obvious exits are NORTH.`
+    ],
+
+    buttons: [
+      {
+        text: 'Look',
+        events () {
+          if (!Flags.hasTrinket) {
+            Player.paragraphOverride = [`Ye stand yeself close to a yet-unnamed escarpment. Nonetheless, ye spies a TRINKET. Obvious exits are NORTH.`]
+          } else if (Flags.hasTrinket && !Flags.getTrinketTwice) {
+            Player.paragraphOverride = [`Ye stand high above a canyon-like depression. Obvious exits are NORTH.`]
+          } else {
+            Player.paragraphOverride = [`Thou hangeth out at an overlook. Obvious exits are NORTH. I shouldn't have to tell ye there is no TRINKET.`]
+          }
+        },
+        children: [
+          {
+            text: 'Trinket',
+            events () {
+              if (!Flags.hasTrinket) {
+                Player.paragraphOverride = [`Quit looking! Just get it already.`]
+              } else {
+                Player.paragraphOverride = [`Just a bulge in thou pouchel at thist point`]
+              }
+            }
+          }
+        ]
+      },
+      {
+        text: 'Get',
+        children: [
+          {
+            text: 'Trinket',
+            events () {
+              if (!Flags.hasTrinket) {
+                Player.paragraphOverride = [`Ye getsts yon TRINKET and discover it to be a bauble. You rejoice at your good fortune. You shove the TRINKET in your pouchel. It kinda hurts.`]
+                Flags.hasTrinket = true
+              } else {
+                Player.paragraphOverride = [`Sigh. The trinket is in thou pouchel. Recallest thou?`]
+                Flags.getTrinketTwice = true
+              }
+            }
+          }
+        ]
+      },
+      {
+        text: 'Go',
+        children: [
+          {
+            text: 'North',
+            events () {
+              Player.CurrentLocation = 'dungeon'
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  dennis: {
+    paragraphs: [
+      `Ye arrive at Dennis. He wears a sporty frock coat and a long jimberjam. He paces about nervously. Obvious exits are NOT DENNIS.`
+    ],
+
+    buttons: [
+      {
+        text: 'Talk',
+        events () {
+          Player.paragraphOverride = [`You engage Dennis in leisurely discussion. Ye learns that his jimberjam was purchased on sale at a discount market and that he enjoys pacing about nervously. You become bored and begin thinking about parapets.`]
+        }
+      },
+      {
+        text: 'Look',
+        children: [
+          {
+            text: 'Dennis',
+            events () {
+              Player.paragraphOverride = [`That jimberjam really makes the outfit.`]
+            }
+          },
+          {
+            text: 'Jimberjam',
+            events () {
+              Player.paragraphOverride = [`Man, that art a nice jimberjam.`]
+            }
+          }
+        ]
+      },
+      {
+        text: 'Give',
+        children: [
+          {
+            text: 'Trinket',
+            events () {
+              if (Flags.hasTrinket) {
+                Player.paragraphOverride = [`A novel idea! You givst the TRINKET to Dennis and he happily agrees to tell you what parapets are. With this new knowledge, ye escapes from yon dungeon in order to search for new dungeons and to remain... THY DUNGEONMAN!! You hath won! Congraturation!!`,
+                  `Play again?`]
+                Player.buttonOverride = loseButtons
+              } else {
+                Player.paragraphOverride = [`Thou don'tst have a trinket to give. Go back to your tiny life.`]
+              }
+            }
+          }
+        ]
+      },
+      {
+        text: 'Go',
+        children: [
+          {
+            text: 'Not Dennis',
+            events () {
+              Player.CurrentLocation = 'dungeon'
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 
@@ -144,7 +262,9 @@ const textData = {}
 
 const flagData = {
   scrollThere: true,
-  flaskAttempts: 0
+  flaskAttempts: 0,
+  hasTrinket: false,
+  getTrinketTwice: false
 }
 
 const itemData = {}

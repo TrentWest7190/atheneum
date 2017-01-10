@@ -15,7 +15,8 @@ export default {
     handleEvents (button) {
       if (button.events) {
         button.events()
-      } else if (button.children) {
+      }
+      if (button.children) {
         this.$emit('replaceButtons', button.children, this.buttonArray)
       }
     },
