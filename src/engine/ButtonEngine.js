@@ -1,5 +1,5 @@
-const getFinalButtonArray = function (inputArray, storyButtons, player) {
-  let finalButtons = player.buttonOverride.length > 0 ? player.buttonOverride : inputArray
+const getFinalButtonArray = function (inputArray, storyButtons, buttonOverride) {
+  let finalButtons = buttonOverride.length > 0 ? buttonOverride : inputArray
   finalButtons = checkConditions(finalButtons, storyButtons)
   return finalButtons
 }

@@ -1,3 +1,32 @@
+function getFinalParagraphArray (inputArray, storyText, additionalParagraphs) {
+  const paragraphs = inputArray.concat(additionalParagraphs)
+  return paragraphs.map(paragraphObj => {
+    if (typeof paragraphObj.condition !== 'undefined') {
+      const conditionResult = paragraphObj.condition()
+      const conditionType = typeof conditionResult
+      if (conditionType === 'string') {
+        if (typeof storyText[conditionResult] !== 'undefined') {
+          return preparedParagraphToArray(storyText[conditionResult])
+        } else {
+          return preparedParagraphToArray({textContent () { return conditionResult }})
+        }
+      } else if (conditionType === 'object') {
+        return preparedParagraphToArray(conditionResult)
+      } else if (conditionType === 'boolean') {
+        return conditionResult ? preparedParagraphToArray(storyText[paragraphObj.name]) : undefined
+      }
+    } else if (typeof paragraphObj === 'object') {
+      return preparedParagraphToArray(paragraphObj)
+    } else if (typeof paragraphObj === 'string') {
+      if (typeof storyText[paragraphObj] !== 'undefined') {
+        return preparedParagraphToArray(storyText[paragraphObj])
+      } else {
+        return preparedParagraphToArray({textContent () { return paragraphObj }})
+      }
+    }
+  }, this).filter(paragraph => typeof paragraph !== 'undefined')
+}
+
 function preparedParagraphToArray (paragraph) {
   let returnArray = []
   let styleRegex = /(\*.+?\*|\/.+?\/)|\w+?|\s+?/g
@@ -20,4 +49,4 @@ function preparedParagraphToArray (paragraph) {
   return returnArray
 }
 
-export default preparedParagraphToArray
+export default getFinalParagraphArray

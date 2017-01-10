@@ -1,7 +1,7 @@
 <template>
   <div class="col-flex">
     <h2>Screens</h2>
-    <select @change="Player.CurrentLocation = $event.target.value">
+    <select @change="Player.CurrentLocation = $event.target.value" :value="Player.CurrentLocation">
       <option v-for="(screen, screenName) in Story.screenData" :value="screenName">{{ screenName }}</option>
     </select>
     <h2>Flags</h2>
