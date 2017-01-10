@@ -4,9 +4,9 @@
       <debug-view class=" bordered-box full-height" :Story="Story" :Player="Player"></debug-view>
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
-      <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
+      <text-view class="bordered-box col-md-8 text-view" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
       <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
-      <input v-else class="bordered-box col-md-4" style="font-size: 25px; font-family: 'Inconsolata', monospace;" placeholder="type here" @keyup.enter="scene.input.callback($event.target.value)">
+      <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
@@ -38,7 +38,7 @@ export default {
       return this.Story.screenData[this.Player.CurrentLocation]
     },
     paragraphs () {
-      return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs)
+      return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs, this.Player.paragraphOverride)
     },
 
     buttons () {
@@ -62,15 +62,37 @@ export default {
 
 <style>
 @import url(https://fonts.googleapis.com/css?family=Inconsolata);
+
+:root {
+  --darkest: #313638;
+  --primary1: #424874;
+  --primary2: #6BA292;
+  --lighter: #E0DFD5;
+  --lightest: #E8E9EB;
+}
+
 body, html {
   height: 100vh;
   margin: 0px;
+  font-family: 'Inconsolata', monospace;
+  color: var(--lightest);
+}
+
+.main-input {
+  color: var(--lightest);
+  background-color: var(--primary1);
+  font-size: 25px;
   font-family: 'Inconsolata', monospace;
 }
 
 #app-container {
   box-sizing: border-box;
   padding: 50px;
+  background-color: var(--primary1)
+}
+
+.text-view {
+  overflow-y: auto;
 }
 
 .row-flex {
@@ -104,7 +126,7 @@ body, html {
 }
 
 .bordered-box {
-  border: 1px solid red;
+  border: 1px solid var(--primary1);
   box-sizing: border-box;
 }
 

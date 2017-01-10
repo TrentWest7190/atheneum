@@ -1,5 +1,5 @@
-function getFinalParagraphArray (inputArray, storyText, additionalParagraphs) {
-  const paragraphs = inputArray.concat(additionalParagraphs)
+function getFinalParagraphArray (inputArray, storyText, additionalParagraphs, paragraphOverride) {
+  const paragraphs = paragraphOverride.length > 0 ? paragraphOverride.concat(additionalParagraphs) : inputArray.concat(additionalParagraphs)
   return paragraphs.map(paragraphObj => {
     if (typeof paragraphObj.condition !== 'undefined') {
       const conditionResult = paragraphObj.condition()
@@ -29,7 +29,7 @@ function getFinalParagraphArray (inputArray, storyText, additionalParagraphs) {
 
 function preparedParagraphToArray (paragraph) {
   let returnArray = []
-  let styleRegex = /(\*.+?\*|\/.+?\/)|\w+?|\s+?/g
+  let styleRegex = /(\*.+?\*|\/.+?\/)|\w+?|\W+?/g
   let results
   let nonstyledCollector = ''
 

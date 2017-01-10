@@ -10,13 +10,20 @@
 export default {
   name: 'text-view',
 
-  props: ['textArray']
+  props: ['textArray', 'hasMoreParagraphs'],
+
+  updated () {
+    if (this.hasMoreParagraphs) {
+      this.$el.scrollTop = this.$el.scrollHeight
+    }
+  }
 }
 </script>
 
 <style>
 p {
   margin-top: 0px;
+  text-indent: 2.0em;
 }
 
 .bold {

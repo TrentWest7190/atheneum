@@ -10,10 +10,12 @@ let Player = {
   set CurrentLocation (value) {
     this.buttonOverride = []
     this.additionalParagraphs = []
+    this.paragraphOverride = []
     this._CurrentLocation = value
   },
   additionalParagraphs: [],
-  buttonOverride: []
+  buttonOverride: [],
+  paragarphOverride: []
 }
 
 Vue.set(Player.State, 'flags', {})

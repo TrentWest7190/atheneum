@@ -36,5 +36,9 @@ export default {
   flex-basis: auto;
   width: 25%;
   height: 50%;
+  background-color: var(--primary2);
+  border: 1px solid var(--primary1);
+  font-family: 'Inconsolata', monospace;
+  color: var(--lightest);
 }
 </style>
