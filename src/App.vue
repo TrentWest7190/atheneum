@@ -22,7 +22,7 @@ import InventoryView from './components/InventoryView'
 
 import TextEngine from './engine/TextEngine'
 import ButtonEngine from './engine/ButtonEngine'
-import { randomNumberBetween } from './engine/StoryUtilities'
+import { randomNumberBetween, returnToTopLevelButtons } from './engine/StoryUtilities'
 
 export default {
   name: 'app',
@@ -70,12 +70,19 @@ export default {
 
     enemyTurn () {
       if (this.Player.currentEnemy.health <= 0) {
-        this.Player.paragraphOverride = this.Player.currentEnemy.winText
+        this.Player.paragraphOverride = this.Player.currentEnemy.win.text
         this.Player.additionalParagraphs = []
+        this.Player.currentEnemy.win.events(this.Player)
       } else {
+        returnToTopLevelButtons()
         const enemyAttacks = Object.keys(this.Player.currentEnemy.attacks)
         const selectedAttack = enemyAttacks[randomNumberBetween(0, enemyAttacks.length)]
         this.Player.currentEnemy.attacks[selectedAttack]()
+        if (this.Story.combatData.loseState()) {
+          this.Player.additionalParagraphs = []
+          this.Player.paragraphOverride = this.Player.currentEnemy.lose.text
+          this.Player.currentEnemy.lose.events(this.Player)
+        }
       }
     }
   }

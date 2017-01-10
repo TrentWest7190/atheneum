@@ -1,7 +1,7 @@
 import Player from '../engine/Player'
-import { randomNumberBetween, returnToTopLevelButtons } from '../engine/StoryUtilities'
+import { randomNumberBetween } from '../engine/StoryUtilities'
 
-const Stats = Player.State.stats
+let Stats = Player.State.stats
 
 const screenData = {
   pre_fight: {
@@ -25,7 +25,7 @@ const statData = {
     value: 10
   },
   health: {
-    value: 10000
+    value: 1
   }
 }
 
@@ -68,13 +68,22 @@ const npcData = {
         Player.additionalParagraphs.push(`The gnome tosses a rock at you. You take 10 damage. Owies.`)
       }
     },
-    winText: [
-      {
-        textContent () {
-          return `You stand over the defeated gnome and steal some gems`
-        }
+    win: {
+      text: [
+        `You stand over the defeated gnome and take his beans`
+      ],
+      events (playerin) {
+        playerin.State.inventory.beans += 5
       }
-    ]
+    },
+    lose: {
+      text: [
+        `The gnome has bested you, he takes some beans`
+      ],
+      events (playerin) {
+        playerin.State.inventory.beans -= 3
+      }
+    }
   }
 }
 
@@ -89,21 +98,32 @@ const combatData = {
             const damage = combatFormulas.punch(Stats.punchitude.value)
             Player.currentEnemy.health -= damage
             Player.additionalParagraphs.push(`You throw a mean right hook and do ${damage} damage.`)
-            returnToTopLevelButtons()
           }
         }
       ]
     }
-  ]
+  ],
+
+  loseState () {
+    return Stats.health.value <= 0
+  }
 }
 
-Player.Setup({}, {}, statData, config.startScreenId)
+const itemData = {
+  beans: {
+    text: 'some nice beans'
+  }
+}
+
+Player.Setup({}, itemData, statData, config.startScreenId)
 
 exports.screenData = screenData
 
 exports.textData = {}
 
 exports.statData = statData
+
+exports.itemData = itemData
 
 exports.combatData = combatData
 
