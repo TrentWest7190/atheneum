@@ -5,7 +5,8 @@
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8" :textArray="paragraphs"></text-view>
-      <button-view class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
+      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
+      <input v-else class="bordered-box col-md-4" style="font-size: 25px; font-family: 'Inconsolata', monospace;" placeholder="type here" @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
@@ -36,13 +37,14 @@ export default {
     scene () {
       return this.Story.screenData[this.Player.CurrentLocation]
     },
-    /* eslint-disable brace-style */
     paragraphs () {
       return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs)
     },
 
     buttons () {
-      return ButtonEngine(this.scene.buttons, this.Story.buttonData, this.Player.buttonOverride)
+      if (this.scene.buttons) {
+        return ButtonEngine(this.scene.buttons, this.Story.buttonData, this.Player.buttonOverride)
+      }
     }
   },
 

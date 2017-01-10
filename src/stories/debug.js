@@ -294,10 +294,53 @@ const screenData = {
                 ]
               }
             ]
+          },
+          {
+            text: 'ddd',
+            children: [
+              {
+                condition () {
+                  return false
+                }
+              }
+            ]
           }
         ]
       }
     ]
+  },
+
+  input_box: {
+    paragraphs: [
+      'tell me your favorite color'
+    ],
+
+    input: {
+      callback (input) {
+        Flags.favColor = input
+        Player.CurrentLocation = 'input_box_2'
+      }
+    }
+  },
+
+  input_box_2: {
+    paragraphs: [
+      {
+        textContent () {
+          return `your favorite color is ${Flags.favColor}`
+        }
+      }
+    ],
+
+    buttons: [
+      {
+        text: 'go back',
+        events () {
+          Player.CurrentLocation = 'input_box'
+        }
+      }
+    ]
+
   }
 }
 
@@ -334,7 +377,7 @@ const statData = {
 }
 
 const config = {
-  startScreenId: 'button_tree'
+  startScreenId: 'input_box'
 }
 
 Player.Setup(flagData, itemData, statData, config.startScreenId)
