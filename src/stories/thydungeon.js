@@ -138,7 +138,20 @@ const screenData = {
 
   south: {
     paragraphs: [
-      `You head south to an enbankment. Or maybe a chasm. You can't decide which. Anyway, ye spies a TRINKET. Obvious exits are NORTH.`
+      {
+        textContent () {
+          return `You head south to an enbankment. Or maybe a chasm. You can't decide which. ${this.replacements.hasTrinket()}Obvious exits are NORTH.`
+        },
+
+        replacements: {
+          hasTrinket () {
+            if (!Flags.hasTrinket) {
+              return 'Anyway, ye spies a TRINKET. '
+            }
+            return ''
+          }
+        }
+      }
     ],
 
     buttons: [
