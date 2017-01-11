@@ -70,18 +70,22 @@ export default {
 
     enemyTurn () {
       if (this.Player.currentEnemy.health <= 0) {
-        this.Player.paragraphOverride = this.Player.currentEnemy.win.text
-        this.Player.additionalParagraphs = []
-        this.Player.currentEnemy.win.events(this.Player.State)
+        this.Player.additionalParagraphs = this.Player.additionalParagraphs.concat(this.Player.currentEnemy.win.text)
+        this.Player.buttonOverride = [{
+          text: 'Next',
+          events: this.Player.currentEnemy.win.events
+        }]
       } else {
         returnToTopLevelButtons()
         const enemyAttacks = Object.keys(this.Player.currentEnemy.attacks)
         const selectedAttack = enemyAttacks[randomNumberBetween(0, enemyAttacks.length)]
         this.Player.currentEnemy.attacks[selectedAttack]()
         if (this.Story.combatData.loseState()) {
-          this.Player.additionalParagraphs = []
-          this.Player.paragraphOverride = this.Player.currentEnemy.lose.text
-          this.Player.currentEnemy.lose.events(this.Player)
+          this.Player.additionalParagraphs = this.Player.additionalParagraphs.concat(this.Player.currentEnemy.lose.text)
+          this.Player.buttonOverride = [{
+            text: 'Next',
+            events: this.Player.currentEnemy.lose.events
+          }]
         }
       }
     }

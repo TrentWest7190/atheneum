@@ -2,6 +2,7 @@ import Player from '../engine/Player'
 import { randomNumberBetween } from '../engine/StoryUtilities'
 
 let Stats = Player.State.stats
+let Inventory = Player.State.inventory
 
 const screenData = {
   pre_fight: {
@@ -82,18 +83,18 @@ const npcData = {
     },
     win: {
       text: [
-        `You stand over the defeated gnome and take his beans`
+        `The gnome crumples to the ground. You stand over the defeated gnome and take his beans`
       ],
-      events (playerState) {
-        playerState.inventory.beans += 5
+      events () {
+        Inventory.beans += 5
       }
     },
     lose: {
       text: [
         `The gnome has bested you, he takes some beans`
       ],
-      events (playerState) {
-        playerState.inventory.beans -= 3
+      events () {
+        Inventory.beans -= 3
       }
     }
   }
