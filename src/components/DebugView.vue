@@ -9,7 +9,7 @@
       <option></option>
       <option v-for="(npc, npcName) in Story.npcData" :value="npc">{{ npcName }}</option>
     </select>
-    Health<input type="number" class="number-input" :value="this.Player.currentEnemy.health" @blur="this.Player.currentEnemy.health = parseInt($event.target.value)">
+    Health<input type="number" class="number-input" :value="getEnemyHealth()" @blur="this.Player.currentEnemy.health = parseInt($event.target.value)">
     <h2>Flags</h2>
     <div class="row-flex debug-row" v-for="(flag, flagName) in Player.State.flags">
       <span>{{ flagName }}</span>
@@ -54,6 +54,14 @@ export default {
         this.Player.State[attributeName][flagName] = isNumber ? parseInt(flagValue) : flagValue
       } else {
         this.Player.State.stats[flagName]._value = parseInt(flagValue)
+      }
+    },
+
+    getEnemyHealth () {
+      if (this.Player.currentEnemy) {
+        return this.Player.currentEnemy.health
+      } else {
+        return 0
       }
     }
   }

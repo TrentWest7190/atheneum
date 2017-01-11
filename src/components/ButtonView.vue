@@ -49,5 +49,6 @@ export default {
   font-family: 'Inconsolata', monospace;
   color: var(--lightest);
   border-radius: 5px;
+  font-size: 20px;
 }
 </style>

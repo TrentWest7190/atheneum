@@ -64,13 +64,13 @@ const npcData = {
         replacements: {
           gnomeState () {
             if (Player.currentEnemy.health >= 80) {
-              return `The gnome seems to be in perfect health`
+              return `The gnome seems to be in perfect health.`
             } else if (Player.currentEnemy.health >= 50) {
-              return `The gnome seems slightly injured`
+              return `The gnome seems slightly injured.`
             } else if (Player.currentEnemy.health >= 20) {
-              return `The gnome is hurtin`
+              return `The gnome is hurtin.`
             } else {
-              return `The gnome won't be gnomin' much longer`
+              return `The gnome won't be gnomin' much longer.`
             }
           }
         }
@@ -84,7 +84,7 @@ const npcData = {
     },
     win: {
       text: [
-        `The gnome crumples to the ground. You stand over the defeated gnome and take his beans`
+        `The gnome crumples to the ground. You stand over the defeated gnome and take his beans.`
       ],
       events () {
         Inventory.beans += 5
@@ -92,10 +92,12 @@ const npcData = {
     },
     lose: {
       text: [
-        `The gnome has bested you, he takes some beans`
+        `The gnome has bested you, he takes some beans.`
       ],
       events () {
         Inventory.beans -= 3
+        Player.CurrentLocation = 'pre_fight'
+        Player.currentEnemy = {}
       }
     }
   }
