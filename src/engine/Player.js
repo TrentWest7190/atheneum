@@ -23,29 +23,13 @@ Vue.set(Player.State, 'flags', {})
 Vue.set(Player.State, 'inventory', {})
 Vue.set(Player.State, 'stats', {})
 
-Player.Functions.setFlag = function (flagName, flagValue) {
-  Vue.set(Player.State.flags, flagName, flagValue)
-}
-
-Player.Functions.getItem = function (itemName, amount) {
-  Vue.set(Player.State.inventory, itemName, amount)
-}
-
-Player.Functions.setStat = function (statName, statValue) {
-  Vue.set(Player.State.stats[statName], 'value', statValue)
-}
-
-Player.Functions.setStatDirect = function (statName, statValue) {
-  Vue.set(Player.State.stats[statName], '_value', statValue)
-}
-
 Player.Setup = function (flagData, itemData, statData, moveTo) {
   for (let [key, value] of Object.entries(flagData)) {
-    Player.Functions.setFlag(key, value)
+    Vue.set(Player.State.flags, key, value)
   }
 
   for (let [key, value] of Object.entries(itemData)) {
-    Player.Functions.getItem(key, value.initAmount || 0)
+    Vue.set(Player.State.inventory, key, value.initAmount || 0)
   }
 
   for (let [key, value] of Object.entries(statData)) {
