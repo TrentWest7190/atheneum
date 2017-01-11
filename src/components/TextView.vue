@@ -26,6 +26,7 @@ p {
   text-indent: 2.0em;
   margin-left: 10px;
   margin-right: 10px;
+  font-size: 20px
 }
 
 .bold {

@@ -9,13 +9,13 @@
       <option></option>
       <option v-for="(npc, npcName) in Story.npcData" :value="npc">{{ npcName }}</option>
     </select>
-    Health<input type="number" :value="this.Player.currentEnemy.health" @blur="this.Player.currentEnemy.health = parseInt($event.target.value)">
+    Health<input type="number" class="number-input" :value="this.Player.currentEnemy.health" @blur="this.Player.currentEnemy.health = parseInt($event.target.value)">
     <h2>Flags</h2>
     <div class="row-flex debug-row" v-for="(flag, flagName) in Player.State.flags">
       <span>{{ flagName }}</span>
       <input class="debug-input" v-if="typeof flag === 'string'" :value="flag"  @blur="updatePlayer('flags', flagName, $event.target.value)">
       <input class="debug-input" v-if="typeof flag === 'boolean'" type="checkbox" :checked="flag" @click="updatePlayer('flags', flagName, $event.target.checked)">
-      <input class="debug-input" v-if="typeof flag === 'number'" type="number" :value="flag" @blur="updatePlayer('flags', flagName, $event.target.value, true)">
+      <input class="number-input" v-if="typeof flag === 'number'" type="number" :value="flag" @blur="updatePlayer('flags', flagName, $event.target.value, true)">
     </div>
     <h2>Inventory</h2>
     <div class="row-flex debug-row" v-for="(item, itemName) in Player.State.inventory">
@@ -61,6 +61,9 @@ export default {
 </script>
 
 <style>
+.number-input {
+  width: 50px
+}
 .debug-input {
   width: 100px
 }
