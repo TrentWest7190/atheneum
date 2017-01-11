@@ -72,7 +72,7 @@ export default {
       if (this.Player.currentEnemy.health <= 0) {
         this.Player.paragraphOverride = this.Player.currentEnemy.win.text
         this.Player.additionalParagraphs = []
-        this.Player.currentEnemy.win.events(this.Player)
+        this.Player.currentEnemy.win.events(this.Player.State)
       } else {
         returnToTopLevelButtons()
         const enemyAttacks = Object.keys(this.Player.currentEnemy.attacks)

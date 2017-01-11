@@ -4,6 +4,11 @@
     <select @change="Player.CurrentLocation = $event.target.value" :value="Player.CurrentLocation">
       <option v-for="(screen, screenName) in Story.screenData" :value="screenName">{{ screenName }}</option>
     </select>
+    <h2>NPCs</h2>
+    <select @change="startFight(selectedNPC)" v-model="selectedNPC">
+      <option></option>
+      <option v-for="(npc, npcName) in Story.npcData" :value="npc">{{ npcName }}</option>
+    </select>
     <h2>Flags</h2>
     <div class="row-flex debug-row" v-for="(flag, flagName) in Player.State.flags">
       <span>{{ flagName }}</span>
@@ -30,6 +35,17 @@ export default {
   name: 'debug-view',
 
   props: ['Story', 'Player'],
+
+  computed: {
+    selectedNPC: {
+      get () {
+        return this.Player.currentEnemy
+      },
+      set (val) {
+        this.Player.currentEnemy = val
+      }
+    }
+  },
 
   methods: {
     updatePlayer (attributeName, flagName, flagValue, isNumber) {

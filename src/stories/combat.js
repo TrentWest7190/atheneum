@@ -22,10 +22,22 @@ const screenData = {
 
 const statData = {
   punchitude: {
-    value: 10
+    _value: 10,
+    get value () {
+      return this._value
+    },
+    set value (val) {
+      this._value = val
+    }
   },
   health: {
-    value: 1
+    _value: 1,
+    get value () {
+      return this._value
+    },
+    set value (val) {
+      this._value = val
+    }
   }
 }
 
@@ -72,16 +84,16 @@ const npcData = {
       text: [
         `You stand over the defeated gnome and take his beans`
       ],
-      events (playerin) {
-        playerin.State.inventory.beans += 5
+      events (playerState) {
+        playerState.inventory.beans += 5
       }
     },
     lose: {
       text: [
         `The gnome has bested you, he takes some beans`
       ],
-      events (playerin) {
-        playerin.State.inventory.beans -= 3
+      events (playerState) {
+        playerState.inventory.beans -= 3
       }
     }
   }
@@ -124,6 +136,8 @@ exports.textData = {}
 exports.statData = statData
 
 exports.itemData = itemData
+
+exports.npcData = npcData
 
 exports.combatData = combatData
 
