@@ -43,7 +43,8 @@ const statData = {
 }
 
 const config = {
-  startScreenId: 'pre_fight'
+  startScreenId: 'pre_fight',
+  storyName: 'Combat Debug'
 }
 
 const combatFormulas = {

@@ -1,15 +1,19 @@
 <template>
-  <div id="app-container" class="full-height row-flex">
+  <div v-if="launchScreen" id="launch-screen" class="full-height col-flex">
+    <h1>{{Story.config.storyName}}</h1>
+    <button id="start-button" @click="launchScreen = false">Start</button>
+  </div>
+  <div v-else id="app-container" class="full-height row-flex">
     <div class="bordered-box full-height col-md-3">
-      <debug-view class=" bordered-box full-height" :Story="Story" :Player="Player"></debug-view>
+      <debug-view class=" bordered-box full-height game-panel padding-container" :Story="Story" :Player="Player"></debug-view>
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
-      <text-view class="bordered-box col-md-8 text-view" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
+      <text-view class="bordered-box col-md-8 text-view game-panel" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
       <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" :inCombat="inCombat" @replaceButtons="replaceButtons" @enemyTurn="enemyTurn" @clearAddtParas="Player.additionalParagraphs = []"></button-view>
       <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
-      <inventory-view class="bordered-box full-height" :Story="Story" :Player="Player"></inventory-view>
+      <inventory-view class="bordered-box full-height game-panel" :Story="Story" :Player="Player"></inventory-view>
     </div>
   </div>
 </template>
@@ -32,6 +36,12 @@ export default {
     ButtonView,
     DebugView,
     InventoryView
+  },
+
+  data () {
+    return {
+      launchScreen: true
+    }
   },
 
   computed: {
@@ -109,6 +119,7 @@ body, html {
   margin: 0px;
   font-family: 'Inconsolata', monospace;
   color: var(--lightest);
+  background-color: var(--primary1);
 }
 
 .main-input {
@@ -121,7 +132,24 @@ body, html {
 #app-container {
   box-sizing: border-box;
   padding: 50px;
-  background-color: var(--primary1)
+}
+
+#start-button {
+  font-family: 'Inconsolata', monospace;
+  background-color: var(--primary2);
+  border: none;
+  width: 150px;
+  height: 50px;
+}
+
+#launch-screen {
+  justify-content: center;
+  align-items: center;
+}
+
+.game-panel {
+  background-color: var(--primary2);
+  border-radius: 20px;
 }
 
 .text-view {
@@ -165,5 +193,10 @@ body, html {
 
 .full-height {
   height: 100%;
+}
+
+.padding-container {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

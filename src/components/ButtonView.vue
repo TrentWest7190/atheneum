@@ -37,6 +37,7 @@ export default {
 <style>
 .flex-wrap {
   flex-wrap: wrap;
+  padding: 10px;
 }
 
 .event-button {
@@ -47,5 +48,6 @@ export default {
   border: 1px solid var(--primary1);
   font-family: 'Inconsolata', monospace;
   color: var(--lightest);
+  border-radius: 5px;
 }
 </style>

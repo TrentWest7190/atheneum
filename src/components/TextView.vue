@@ -24,6 +24,8 @@ export default {
 p {
   margin-top: 0px;
   text-indent: 2.0em;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .bold {
