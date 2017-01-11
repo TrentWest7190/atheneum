@@ -16,7 +16,7 @@ export const randomNumberBetween = function (min, max) {
   return Math.floor(Math.random() * max) + min
 }
 
-export const reset = function (flagData, itemData, statData, startScreenId) {
+export const reset = function (flagData = {}, itemData = {}, statData = {}, startScreenId) {
   Player.paragraphOverride = []
   Player.buttonOverride = []
   Player.Setup(flagData, itemData, statData, startScreenId)
