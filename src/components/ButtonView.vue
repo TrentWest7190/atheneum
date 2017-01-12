@@ -9,7 +9,7 @@
 export default {
   name: 'button-view',
 
-  props: ['buttonArray', 'inCombat'],
+  props: ['buttonArray'],
 
   methods: {
     handleEvents (button) {

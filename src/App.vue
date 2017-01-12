@@ -9,7 +9,7 @@
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8 text-view game-panel" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
-      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" :inCombat="inCombat" @replaceButtons="replaceButtons"></button-view>
+      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
       <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">

@@ -1,10 +1,3 @@
-import Player from '../engine/Player'
-
-/* eslint-disable no-unused-vars */
-let Flags = Player.State.flags
-let Inventory = Player.State.inventory
-let Stats = Player.State.stats
-
 const textData = {
   paragraph_1: {
     textContent () {
