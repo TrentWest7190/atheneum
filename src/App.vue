@@ -9,7 +9,7 @@
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
       <text-view class="bordered-box col-md-8 text-view game-panel" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
-      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" :inCombat="inCombat" @replaceButtons="replaceButtons" @enemyTurn="enemyTurn" @clearAddtParas="Player.additionalParagraphs = []"></button-view>
+      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" :inCombat="inCombat" @replaceButtons="replaceButtons"></button-view>
       <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
@@ -26,7 +26,6 @@ import InventoryView from './components/InventoryView'
 
 import TextEngine from './engine/TextEngine'
 import ButtonEngine from './engine/ButtonEngine'
-import { randomNumberBetween, returnToTopLevelButtons } from './engine/StoryUtilities'
 
 export default {
   name: 'app',
@@ -46,26 +45,24 @@ export default {
 
   computed: {
     scene () {
-      return this.Story.screenData[this.Player.CurrentLocation]
+      if (typeof this.Player.CurrentLocation === 'string') {
+        return this.Story.screenData[this.Player.CurrentLocation]
+      } else if (typeof this.Player.CurrentLocation === 'object') {
+        return this.Player.CurrentLocation
+      }
     },
     paragraphs () {
-      if (!this.inCombat) {
-        return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs, this.Player.paragraphOverride)
-      } else if (this.inCombat) {
-        return TextEngine(this.Player.currentEnemy.mainText, this.Story.textData, this.Player.additionalParagraphs, this.Player.paragraphOverride)
-      }
+      return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs, this.Player.paragraphOverride)
     },
 
     buttons () {
-      if (!this.inCombat && this.scene.buttons) {
+      if (this.scene.buttons) {
         return ButtonEngine(this.scene.buttons, this.Story.buttonData, this.Player.buttonOverride)
-      } else if (this.inCombat) {
-        return ButtonEngine(this.Story.combatData.buttons, this.Story.buttonData, this.Player.buttonOverride)
       }
     },
 
     inCombat () {
-      return Object.keys(this.Player.currentEnemy).length !== 0
+      return this.Player.inCombat
     }
   },
 
@@ -76,28 +73,6 @@ export default {
         Object.defineProperty(newButtons, '_parent', {value: orig})
       }
       this.Player.buttonOverride = newButtons
-    },
-
-    enemyTurn () {
-      if (this.Player.currentEnemy.health <= 0) {
-        this.Player.additionalParagraphs = this.Player.additionalParagraphs.concat(this.Player.currentEnemy.win.text)
-        this.Player.buttonOverride = [{
-          text: 'Next',
-          events: this.Player.currentEnemy.win.events
-        }]
-      } else {
-        returnToTopLevelButtons()
-        const enemyAttacks = Object.keys(this.Player.currentEnemy.attacks)
-        const selectedAttack = enemyAttacks[randomNumberBetween(0, enemyAttacks.length)]
-        this.Player.currentEnemy.attacks[selectedAttack]()
-        if (this.Story.combatData.loseState()) {
-          this.Player.additionalParagraphs = this.Player.additionalParagraphs.concat(this.Player.currentEnemy.lose.text)
-          this.Player.buttonOverride = [{
-            text: 'Next',
-            events: this.Player.currentEnemy.lose.events
-          }]
-        }
-      }
     }
   }
 }

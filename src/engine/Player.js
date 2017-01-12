@@ -16,7 +16,8 @@ let Player = {
   additionalParagraphs: [],
   buttonOverride: [],
   paragarphOverride: [],
-  currentEnemy: {}
+  currentEnemy: {},
+  inCombat: false
 }
 
 Vue.set(Player.State, 'flags', {})

@@ -1,4 +1,5 @@
 import Player from '../engine/Player'
+import CombatEngine from '../engine/CombatEngine'
 import { randomNumberBetween } from '../engine/StoryUtilities'
 
 let Stats = Player.State.stats
@@ -14,7 +15,8 @@ const screenData = {
       {
         text: 'gnome',
         events () {
-          Player.currentEnemy = npcData.gnome
+          console.log(npcData.gnome.stats)
+          CombatEngine(npcData.gnome, combatData)
         }
       }
     ]
@@ -55,19 +57,21 @@ const combatFormulas = {
 
 const npcData = {
   gnome: {
-    health: 100,
+    stats: {
+      health: 100
+    },
     mainText: [
       {
         textContent () {
-          return `You're fighting a gnome. He looks pretty pissed and has fists full of gravel. ${this.replacements.gnomeState()}`
+          return `You're fighting a gnome. He looks pretty pissed and has fists full of gravel. ${this.replacements.gnomeState.call(Player.currentEnemy)}`
         },
         replacements: {
           gnomeState () {
-            if (Player.currentEnemy.health >= 80) {
+            if (this.stats.health >= 80) {
               return `The gnome seems to be in perfect health.`
-            } else if (Player.currentEnemy.health >= 50) {
+            } else if (this.stats.health >= 50) {
               return `The gnome seems slightly injured.`
-            } else if (Player.currentEnemy.health >= 20) {
+            } else if (this.stats.health >= 20) {
               return `The gnome is hurtin.`
             } else {
               return `The gnome won't be gnomin' much longer.`
@@ -84,27 +88,42 @@ const npcData = {
     },
     win: {
       text: [
-        `The gnome crumples to the ground. You stand over the defeated gnome and take his beans.`
+        `The gnome crumples to the ground. You stand over the defeated gnome.`
       ],
-      events () {
-        Inventory.beans += 5
-      }
+      buttons: [
+        {
+          text: 'Take his beans',
+          events () {
+            Inventory.beans += 5
+            Player.CurrentLocation = 'pre_fight'
+            Player.currentEnemy = {}
+          }
+        }
+      ]
     },
     lose: {
       text: [
         `The gnome has bested you, he takes some beans.`
       ],
-      events () {
-        Inventory.beans -= 3
-        Player.CurrentLocation = 'pre_fight'
-        Player.currentEnemy = {}
-      }
+      buttons: [
+        {
+          text: 'Next',
+          events () {
+            Inventory.beans -= 3
+            Player.CurrentLocation = 'pre_fight'
+            Player.currentEnemy = {}
+          }
+        }
+      ]
+    },
+    winState () {
+      return this.stats.health <= 0
     }
   }
 }
 
 const combatData = {
-  buttons: [
+  defaultButtons: [
     {
       text: 'Attack',
       children: [
@@ -112,7 +131,7 @@ const combatData = {
           text: 'Punch',
           events () {
             const damage = combatFormulas.punch(Stats.punchitude.value)
-            Player.currentEnemy.health -= damage
+            Player.currentEnemy.stats.health -= damage
             Player.additionalParagraphs.push(`You throw a mean right hook and do ${damage} damage.`)
           }
         }
