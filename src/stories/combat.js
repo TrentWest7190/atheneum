@@ -15,7 +15,6 @@ const screenData = {
       {
         text: 'gnome',
         events () {
-          console.log(npcData.gnome.stats)
           CombatEngine(npcData.gnome, combatData)
         }
       }

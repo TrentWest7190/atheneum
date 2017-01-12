@@ -59,10 +59,6 @@ export default {
       if (this.scene.buttons) {
         return ButtonEngine(this.scene.buttons, this.Story.buttonData, this.Player.buttonOverride)
       }
-    },
-
-    inCombat () {
-      return this.Player.inCombat
     }
   },
 

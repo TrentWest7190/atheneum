@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 let Player = {
   State: {},
-  Functions: {},
   _CurrentLocation: '',
   get  CurrentLocation () {
     return this._CurrentLocation
@@ -16,8 +15,7 @@ let Player = {
   additionalParagraphs: [],
   buttonOverride: [],
   paragarphOverride: [],
-  currentEnemy: {},
-  inCombat: false
+  currentEnemy: {}
 }
 
 Vue.set(Player.State, 'flags', {})
@@ -37,9 +35,7 @@ Player.Setup = function (flagData, itemData, statData, moveTo) {
     Vue.set(Player.State.stats, key, value)
   }
 
-  Vue.set(Player, 'additionalParagraphs', [])
   Vue.set(Player, 'CurrentLocation', moveTo)
-  Vue.set(Player, 'currentEnemy', {})
 }
 
 export default Player
