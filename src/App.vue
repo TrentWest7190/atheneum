@@ -5,12 +5,32 @@
   </div>
   <div v-else id="app-container" class="full-height row-flex">
     <div class="bordered-box full-height col-md-3">
-      <div class=" bordered-box full-height game-panel padding-container" :Player="Player"></div>
+      <debug-view
+        class=" bordered-box full-height game-panel padding-container"
+        :Player="Player"
+        :CurrentLocation="CurrentLocation"
+        :debug="debug"
+        @debugMove="loadLocation"
+        @debug="debugFunction"></debug-view>
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
-      <text-view class="bordered-box col-md-8 text-view game-panel" :textArray="DisplayedText" :hasMoreParagraphs="AdditionalText.length > 0"></text-view>
-      <button-view v-if="true" class="bordered-box col-md-4" :buttonArray="DisplayedButtons" @doEvent="doEvent"></button-view>
-      <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
+      <text-view
+        class="bordered-box col-md-8 text-view game-panel" 
+        :textArray="DisplayedText" 
+        :hasMoreParagraphs="AdditionalText.length > 0">
+      </text-view>
+      <button-view
+        v-if="true" 
+        class="bordered-box col-md-4" 
+        :buttonArray="DisplayedButtons" 
+        :inTree="TreeTraversal.length > 0" 
+        @doEvent="doEvent" 
+        @traverseUp="traverseUp"></button-view>
+      <input
+        v-else 
+        class="bordered-box col-md-4 main-input" 
+        placeholder="Click here to type" 
+        @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height game-panel" :Player="Player"></inventory-view>
@@ -48,13 +68,15 @@ export default {
       },
       CurrentLocation: {},
       AdditionalText: [],
-      TreeTraversal: []
+      TreeTraversal: [],
+      debug: {
+        screenData: Story.screenData
+      }
     }
   },
 
   computed: {
     DisplayedText () {
-      console.log(this.CurrentLocation)
       return this.loadText(this.CurrentLocation.text)
     },
     DisplayedButtons () {
@@ -65,6 +87,7 @@ export default {
   created () {
     this.loadPlayerData('Flags', Story.flagData)
     this.loadPlayerData('Inventory', Story.itemData)
+    this.loadPlayerData('Stats', Story.statData)
     this.loadLocation(Story.startScreen)
   },
 
@@ -90,12 +113,14 @@ export default {
       return _.compact(returnArray)
     },
     doEvent (events) {
+      this.TreeTraversal.push(this.DisplayedButtons)
       const returnButtons = events.call(this)
       if (Array.isArray(returnButtons)) {
-        this.TreeTraversal.push(this.DisplayedButtons)
         this.CurrentLocation.buttons = () => {
           return returnButtons
         }
+      } else if (typeof returnButtons === 'function') {
+        this.CurrentLocation.buttons = returnButtons
       }
     },
     loadLocation (location) {
@@ -111,6 +136,15 @@ export default {
     loadPlayerData (playerComponent, data) {
       for (let compName in data) {
         this.$set(this.Player[playerComponent], compName, data[compName])
+      }
+    },
+    debugFunction ({type, name, value, isNumber}) {
+      if (type === 'inventory') {
+        this.Player.Inventory[name].amount = parseInt(value)
+      } else if (type === 'flags') {
+        this.Player.Flags[name] = isNumber ? parseInt(value) : value
+      } else if (type === 'stats') {
+        this.Player.Stats[name]._value = parseInt(value)
       }
     }
   }

@@ -88,7 +88,7 @@ const buttonData = {
   button_11: {
     text: 'pick up horn',
     events () {
-      this.Player.Inventory.horn += 1
+      this.Player.Inventory.horn.amount += 1
     }
   },
 
@@ -102,14 +102,14 @@ const buttonData = {
   button_13: {
     text: 'drop horn',
     events () {
-      this.Player.Inventory.horn = 0
+      this.Player.Inventory.horn.amount = 0
     }
   },
 
   button_16: {
     text: 'bash horn',
     events () {
-      this.Player.Inventory.horn -= 1
+      this.Player.Inventory.horn.amount -= 1
       this.AdditionalText.push('You pound out the horn into a fine mist')
     }
   },
@@ -181,7 +181,7 @@ const screenData = {
     buttons () {
       let returnArray = []
       returnArray.push(buttonData.button_11)
-      if (this.Player.Inventory.horn > 0) {
+      if (this.Player.Inventory.horn.amount > 0) {
         returnArray.push(buttonData.button_12)
         returnArray.push(buttonData.button_13)
         returnArray.push(buttonData.button_16)
@@ -192,10 +192,9 @@ const screenData = {
 
   button_tree: {
     text: [
-      'all button types'
+      'treeo'
     ],
     buttons: [
-      'button_19',
       {
         text: 'look',
         events () {
@@ -210,37 +209,20 @@ const screenData = {
       },
       {
         text: 'dubfdf',
-        children: [
-          {
-            text: 'hey',
-            children: [
-              {
-                text: 'hi'
-              },
-              {
-                text: 'nonoshow',
-                children: [
+        events () {
+          return [
+            {
+              text: 'hey',
+              events () {
+                return [
                   {
-                    text: 'noshow',
-                    condition () {
-                      return false
-                    }
+                    text: 'hi'
                   }
                 ]
               }
-            ]
-          },
-          {
-            text: 'ddd',
-            children: [
-              {
-                condition () {
-                  return false
-                }
-              }
-            ]
-          }
-        ]
+            }
+          ]
+        }
       }
     ]
   }
@@ -261,28 +243,17 @@ const itemData = {
 
 const statData = {
   testStat: {
-    _value: 0,
-    get value () {
-      if (this.Player.Flags.testFlag) {
-        return this._value + 100
-      }
-      return this._value
-    },
-    set value (newValue) {
-      if (this.Player.Flags.testFlag) {
-        this._value + newValue + 10
-      } else {
-        this._value + newValue
-      }
-    }
+    value: 0
   }
 }
 
 const config = {
   storyName: 'debug',
-  startScreen: screenData.screen_4,
+  startScreen: screenData.button_tree,
   flagData,
-  itemData
+  itemData,
+  statData,
+  screenData
 }
 
 module.exports = config

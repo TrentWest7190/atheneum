@@ -1,75 +1,50 @@
 <template>
   <div class="col-flex">
     <h2>Screens</h2>
-    <select @change="Player.CurrentLocation = $event.target.value" :value="Player.CurrentLocation">
-      <option v-for="(screen, screenName) in Story.screenData" :value="screenName">{{ screenName }}</option>
+    <select v-model="selectedScreen" @change="$emit('debugMove', selectedScreen)">
+      <option v-for="(screen, screenName) in debug.screenData" :value="screen">{{ screenName }}</option>
     </select>
-    <h2>NPC</h2>
-    <div class="row-flex debug-row" v-for="(stat, statName) in Player.currentEnemy.stats">
-      <span>{{ statName }}</span>
-      <input class="number-input" type="number" :value="stat" @blur="Player.currentEnemy.stats[statName] = parseInt($event.target.value)">
-    </div>
     <h2>Flags</h2>
-    <div class="row-flex debug-row" v-for="(flag, flagName) in Player.State.flags">
+    <div class="row-flex debug-row" v-for="(flag, flagName) in Player.Flags">
       <span>{{ flagName }}</span>
-      <input class="debug-input" v-if="typeof flag === 'string'" :value="flag"  @blur="updatePlayer('flags', flagName, $event.target.value)">
-      <input class="debug-input" v-if="typeof flag === 'boolean'" type="checkbox" :checked="flag" @click="updatePlayer('flags', flagName, $event.target.checked)">
-      <input class="number-input" v-if="typeof flag === 'number'" type="number" :value="flag" @blur="updatePlayer('flags', flagName, $event.target.value, true)">
+      <input 
+        class="debug-input" 
+        v-if="typeof flag === 'string'" 
+        :value="flag"  
+        @blur="$emit('debug', {type: 'flags', name: flagName, value: $event.target.value})">
+      <input 
+        class="debug-input" 
+        v-if="typeof flag === 'boolean'" 
+        type="checkbox" 
+        :checked="flag" 
+        @click="$emit('debug', {type: 'flags', name: flagName, value: $event.target.checked})">
+      <input 
+        class="number-input" 
+        v-if="typeof flag === 'number'" 
+        type="number" 
+        :value="flag" 
+        @blur="$emit('debug', {type: 'flags', name: flagName, value: $event.target.value, isNumber: true})">
     </div>
     <h2>Inventory</h2>
-    <div class="row-flex debug-row" v-for="(item, itemName) in Player.State.inventory">
+    <div class="row-flex debug-row" v-for="(item, itemName) in Player.Inventory">
       <span>{{ itemName }}</span>
-      <input class="debug-input" type="number" :value="item" @blur="updatePlayer('inventory', itemName, $event.target.value, true)">
+      <input class="debug-input" type="number" :value="item.amount" @blur="updatePlayer('inventory', itemName, $event.target.value, true)">
     </div>
     <h2>Stats</h2>
-    <div class="row-flex debug-row" v-for="(stat, statName) in Player.State.stats">
-      <span>{{ statName }}</span>
-      <input class="debug-input" type="number" :value="stat._value" @blur="updatePlayer('stats', statName, $event.target.value, true)">
-      <span>True: {{ stat.value }}</span>
+    <div class="row-flex debug-row" v-for="(stat, statName) in Player.Stats">
     </div>
   </div>
 </template>
 
 <script>
-import CombatEngine from '../engine/CombatEngine'
-
 export default {
   name: 'debug-view',
 
-  props: ['Player'],
+  props: ['Player', 'debug', 'CurrentLocation'],
 
   data () {
     return {
-      CombatEngine
-    }
-  },
-
-  computed: {
-    selectedNPC: {
-      get () {
-        return this.Player.currentEnemy
-      },
-      set (val) {
-        this.Player.currentEnemy = val
-      }
-    }
-  },
-
-  methods: {
-    updatePlayer (attributeName, flagName, flagValue, isNumber) {
-      if (attributeName !== 'stats') {
-        this.Player.State[attributeName][flagName] = isNumber ? parseInt(flagValue) : flagValue
-      } else {
-        this.Player.State.stats[flagName]._value = parseInt(flagValue)
-      }
-    },
-
-    getEnemyHealth () {
-      if (this.Player.currentEnemy) {
-        return this.Player.currentEnemy.health
-      } else {
-        return 0
-      }
+      selectedScreen: this.CurrentLocation
     }
   }
 }
