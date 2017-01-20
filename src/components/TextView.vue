@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-for="paragraph in textArray">
-      <span v-for="word in paragraph" :class="word.style">{{ word.content }}</span>
+      {{ paragraph }}
     </p>
   </div>
 </template>

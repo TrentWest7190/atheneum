@@ -36,7 +36,7 @@ import CombatEngine from '../engine/CombatEngine'
 export default {
   name: 'debug-view',
 
-  props: ['Story', 'Player'],
+  props: ['Player'],
 
   data () {
     return {

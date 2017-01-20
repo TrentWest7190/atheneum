@@ -1,5 +1,5 @@
-import Player from './Player'
-import { randomNumberBetween } from './StoryUtilities'
+const Player = {}
+const randomNumberBetween = () => true
 import cloneDeep from 'lodash.clonedeep'
 
 function startCombat (npc, combatData) {

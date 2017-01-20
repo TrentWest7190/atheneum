@@ -1,56 +1,25 @@
-import Player from '../engine/Player'
-
 /* eslint-disable no-unused-vars */
-let Flags = Player.State.flags
-let Inventory = Player.State.inventory
-let Stats = Player.State.stats
-
 const textData = {
-  paragraph_1: {
-    textContent () {
-      return `The first test string.`
-    }
+  paragraph_1 () {
+    return `The first test string.`
   },
-
-  paragraph_2: {
-    textContent () {
-      return `${this.replacements.isTestFlagTrue()}`
-    },
-    replacements: {
-      isTestFlagTrue () {
-        return Flags.testFlag ? 'the flag is true' : 'the flag is false'
-      }
-    }
+  paragraph_2 () {
+    return this.Player.Flags.testFlag ? 'the flag is true' : 'the flag is false'
   },
-
-  paragraph_3: {
-    textContent () {
-      return `funt`
-    }
+  paragraph_3 () {
+    return `funt`
   },
-
-  paragraph_4: {
-    textContent () {
-      return `the horn room`
-    }
+  paragraph_4 () {
+    return `the horn room`
   },
-
-  paragraph_5: {
-    textContent () {
-      return `dodooooooot`
-    }
+  paragraph_5 () {
+    return `dodooooooot`
   },
-
-  paragraph_6: {
-    textContent () {
-      return `a input box go here eventually`
-    }
+  paragraph_6 () {
+    return `a input box go here eventually`
   },
-
-  paragraph_7: {
-    textContent () {
-      return `${Flags.favColor}`
-    }
+  paragraph_7 () {
+    return `${this.Player.Flags.favColor}`
   }
 }
 
@@ -58,21 +27,21 @@ const buttonData = {
   button_1: {
     text: 'go forward',
     events () {
-      Player.CurrentLocation = 'screen_2'
+      this.loadLocation(screenData.screen_2)
     }
   },
 
   button_2: {
     text: 'go back',
     events () {
-      Player.CurrentLocation = 'screen_1'
+      this.loadLocation(screenData.screen_1)
     }
   },
 
   button_3: {
     text: 'activate flag',
     events () {
-      Flags.testFlag = true
+      this.Player.Flags.testFlag = true
     }
   },
 
@@ -98,50 +67,50 @@ const buttonData = {
   button_8: {
     text: '3rd screen',
     events () {
-      Player.CurrentLocation = 'screen_3'
+      this.loadLocation(screenData.screen_3)
     }
   },
 
   button_9: {
     text: 'increase counter by 1',
     events () {
-      Flags.testCounter += 1
+      this.Player.Flags.testCounter += 1
     }
   },
 
   button_10: {
     text: 'decrease counter by 1',
     events () {
-      Flags.testCounter -= 1
+      this.Player.Flags.testCounter -= 1
     }
   },
 
   button_11: {
     text: 'pick up horn',
     events () {
-      Inventory.horn += 1
+      this.Player.Inventory.horn += 1
     }
   },
 
   button_12: {
     text: 'play horn',
     events () {
-      Player.additionalParagraphs.push('paragraph_5')
+      this.AdditionalText.push(textData.paragraph_5)
     }
   },
 
   button_13: {
     text: 'drop horn',
     events () {
-      Inventory.horn = 0
+      this.Player.Inventory.horn = 0
     }
   },
 
   button_16: {
     text: 'bash horn',
     events () {
-      Inventory.horn -= 1
-      Player.additionalParagraphs.push('You pound out the horn into a fine mist')
+      this.Player.Inventory.horn -= 1
+      this.AdditionalText.push('You pound out the horn into a fine mist')
     }
   },
 
@@ -160,118 +129,84 @@ const buttonData = {
 
 const screenData = {
   screen_1: {
-    paragraphs: [
-      'paragraph_1'
+    text: [
+      textData.paragraph_1
     ],
     buttons: [
-      'button_1',
-      'button_3'
+      buttonData.button_1,
+      buttonData.button_3
     ]
   },
 
   screen_2: {
-    paragraphs: ['paragraph_2'],
-    buttons: [
-      'button_2',
-      {
-        name: 'button_4',
-        condition () {
-          return Flags.testFlag
-        }
-      },
-      'button_8'
-    ]
+    text: [textData.paragraph_2],
+    buttons () {
+      return [
+        buttonData.button_2,
+        this.Player.Flags.testFlag ? buttonData.button_4 : null,
+        buttonData.button_8
+      ]
+    }
   },
 
   screen_3: {
-    paragraphs: [
-      {
-        name: 'paragraph_3',
-        condition () {
-          return Flags.testCounter > 8 && Flags.testCounter < 12
-        }
+    text () {
+      let returnArray = []
+      if (this.Player.Flags.testCounter > 8 && this.Player.Flags.testCounter < 12) {
+        returnArray.push(textData.paragraph_3)
       }
-    ],
-    buttons: [
-      {
-        name: 'button_5',
-        condition () {
-          return Flags.testCounter === 10
-        }
-      },
-      'button_9',
-      'button_10'
-    ]
+      return returnArray
+    },
+    buttons () {
+      let returnArray = []
+      if (this.Player.Flags.testCounter === 10) {
+        returnArray.push(buttonData.button_5)
+      }
+      if (this.Player.Flags.testCounter < 10) {
+        returnArray.push(buttonData.button_6)
+      }
+      if (this.Player.Flags.testCounter > 10) {
+        returnArray.push(buttonData.button_7)
+      }
+      returnArray.push(buttonData.button_9)
+      returnArray.push(buttonData.button_10)
+      return returnArray
+    }
   },
 
   screen_4: {
-    paragraphs: [
-      'paragraph_4'
+    text: [
+      textData.paragraph_4
     ],
-    buttons: [
-      'button_11',
-      {
-        name: 'button_12',
-        condition () {
-          return Inventory.horn > 0
-        }
-      },
-      {
-        name: 'button_13',
-        condition () {
-          return Inventory.horn > 0
-        }
-      },
-      {
-        name: 'button_16',
-        condition () {
-          return Inventory.horn > 0
-        }
+    buttons () {
+      let returnArray = []
+      returnArray.push(buttonData.button_11)
+      if (this.Player.Inventory.horn > 0) {
+        returnArray.push(buttonData.button_12)
+        returnArray.push(buttonData.button_13)
+        returnArray.push(buttonData.button_16)
       }
-    ]
+      return returnArray
+    }
   },
 
   button_tree: {
-    paragraphs: [
+    text: [
       'all button types'
     ],
     buttons: [
-      {
-        name: 'button_17',
-        condition () {
-          return true
-        }
-      },
-      {
-        text: 'boolean true fullobj',
-        condition () {
-          return true
-        }
-      },
-      {
-        condition () {
-          return 'button_18'
-        }
-      },
-      {
-        condition () {
-          return { text: 'return object' }
-        }
-      },
-      {
-        text: 'raw button'
-      },
       'button_19',
       {
         text: 'look',
-        children: [
-          {
-            text: 'dont show',
-            condition () {
-              return false
+        events () {
+          return [
+            {
+              text: 'dont show',
+              events () {
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       {
         text: 'dubfdf',
@@ -308,39 +243,6 @@ const screenData = {
         ]
       }
     ]
-  },
-
-  input_box: {
-    paragraphs: [
-      'tell me your favorite color'
-    ],
-
-    input: {
-      callback (input) {
-        Flags.favColor = input
-        Player.CurrentLocation = 'input_box_2'
-      }
-    }
-  },
-
-  input_box_2: {
-    paragraphs: [
-      {
-        textContent () {
-          return `your favorite color is ${Flags.favColor}`
-        }
-      }
-    ],
-
-    buttons: [
-      {
-        text: 'go back',
-        events () {
-          Player.CurrentLocation = 'input_box'
-        }
-      }
-    ]
-
   }
 }
 
@@ -353,7 +255,7 @@ const flagData = {
 const itemData = {
   horn: {
     text: 'A funny horn',
-    categories: ['usable']
+    amount: 0
   }
 }
 
@@ -361,13 +263,13 @@ const statData = {
   testStat: {
     _value: 0,
     get value () {
-      if (Flags.testFlag) {
+      if (this.Player.Flags.testFlag) {
         return this._value + 100
       }
       return this._value
     },
     set value (newValue) {
-      if (Flags.testFlag) {
+      if (this.Player.Flags.testFlag) {
         this._value + newValue + 10
       } else {
         this._value + newValue
@@ -377,21 +279,10 @@ const statData = {
 }
 
 const config = {
-  startScreenId: 'input_box'
+  storyName: 'debug',
+  startScreen: screenData.screen_4,
+  flagData,
+  itemData
 }
 
-Player.Setup(flagData, itemData, statData, config.startScreenId)
-
-exports.textData = textData
-
-exports.buttonData = buttonData
-
-exports.screenData = screenData
-
-exports.flagData = flagData
-
-exports.itemData = itemData
-
-exports.statData = statData
-
-exports.config = config
+module.exports = config
