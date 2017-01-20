@@ -134,7 +134,13 @@ const screenData = {
     ],
     buttons: [
       buttonData.button_1,
-      buttonData.button_3
+      buttonData.button_3,
+      {
+        text: 'stat grow',
+        events () {
+          this.Player.Stats.testStat += 10
+        }
+      }
     ]
   },
 
