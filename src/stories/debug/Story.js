@@ -138,7 +138,7 @@ const screenData = {
       {
         text: 'stat grow',
         events () {
-          this.Player.Stats.testStat += 10
+          this.Player.Stats.testStat.value = 10
         }
       }
     ]
@@ -234,31 +234,9 @@ const screenData = {
   }
 }
 
-const flagData = {
-  testFlag: false,
-  testString: 'grunk',
-  testCounter: 10
-}
-
-const itemData = {
-  horn: {
-    text: 'A funny horn',
-    amount: 0
-  }
-}
-
-const statData = {
-  testStat: {
-    value: 0
-  }
-}
-
 const config = {
   storyName: 'debug',
-  startScreen: screenData.button_tree,
-  flagData,
-  itemData,
-  statData,
+  startScreen: screenData.screen_1,
   screenData
 }
 

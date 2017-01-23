@@ -32,6 +32,9 @@
     </div>
     <h2>Stats</h2>
     <div class="row-flex debug-row" v-for="(stat, statName) in Player.Stats">
+      <span>{{ statName }}</span>
+      <span>{{ stat._value }}</span>
+      <span>{{ stat.value }}</span>
     </div>
   </div>
 </template>

@@ -46,7 +46,7 @@ import InventoryView from './components/InventoryView'
 
 import _ from 'lodash'
 
-const Story = require('./stories/debug.js')
+const Story = require('./stories/debug/Story.js')
 
 export default {
   name: 'app',
@@ -61,11 +61,7 @@ export default {
     return {
       storyName: Story.storyName,
       launchScreen: false,
-      Player: {
-        Flags: {},
-        Inventory: {},
-        Stats: {}
-      },
+      Player: require('./stories/debug/Player.js'),
       CurrentLocation: {},
       AdditionalText: [],
       TreeTraversal: [],
@@ -85,9 +81,14 @@ export default {
   },
 
   created () {
-    this.loadPlayerData('Flags', Story.flagData)
-    this.loadPlayerData('Inventory', Story.itemData)
-    this.loadPlayerData('Stats', Story.statData)
+    _.forEach(this.Player.Stats, (stat) => {
+      Object.defineProperties(stat, {
+        value: {
+          get: stat.getter.bind(stat, this.Player),
+          set: stat.setter.bind(stat, this.Player)
+        }
+      })
+    })
     this.loadLocation(Story.startScreen)
   },
 
@@ -113,13 +114,14 @@ export default {
       return _.compact(returnArray)
     },
     doEvent (events) {
-      this.TreeTraversal.push(this.DisplayedButtons)
       const returnButtons = events.call(this)
       if (Array.isArray(returnButtons)) {
+        this.TreeTraversal.push(this.DisplayedButtons)
         this.CurrentLocation.buttons = () => {
           return returnButtons
         }
       } else if (typeof returnButtons === 'function') {
+        this.TreeTraversal.push(this.DisplayedButtons)
         this.CurrentLocation.buttons = returnButtons
       }
     },
@@ -131,11 +133,6 @@ export default {
     traverseUp () {
       this.CurrentLocation.buttons = () => {
         return this.TreeTraversal.pop()
-      }
-    },
-    loadPlayerData (playerComponent, data) {
-      for (let compName in data) {
-        this.$set(this.Player[playerComponent], compName, data[compName])
       }
     },
     debugFunction ({type, name, value, isNumber}) {
