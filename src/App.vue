@@ -4,6 +4,7 @@
     <button id="start-button" @click="launchScreen = false">Start</button>
   </div>
   <div v-else id="app-container" class="full-height row-flex">
+    <button id="options-button" @click="showOptionModal = !showOptionModal">Options</button>
     <div class="bordered-box full-height col-md-3">
       <debug-view
         class=" bordered-box full-height game-panel padding-container"
@@ -34,6 +35,10 @@
     </div>
     <div class="bordered-box full-height col-md-3">
       <inventory-view class="bordered-box full-height game-panel" :Player="Player"></inventory-view>
+    </div>
+    <div id="option-modal" v-if="showOptionModal">
+      <button @click="saveGame">Save Game</button>
+      <button @click="loadGame">Load Game</button>
     </div>
   </div>
 </template>
@@ -67,7 +72,8 @@ export default {
       TreeTraversal: [],
       debug: {
         screenData: Story.screenData
-      }
+      },
+      showOptionModal: false
     }
   },
 
@@ -81,14 +87,6 @@ export default {
   },
 
   created () {
-    _.forEach(this.Player.Stats, (stat) => {
-      Object.defineProperties(stat, {
-        value: {
-          get: stat.getter.bind(stat, this.Player),
-          set: stat.setter.bind(stat, this.Player)
-        }
-      })
-    })
     this.loadLocation(Story.startScreen)
   },
 
@@ -143,6 +141,16 @@ export default {
       } else if (type === 'stats') {
         this.Player.Stats[name]._value = parseInt(value)
       }
+    },
+    saveGame () {
+      /* eslint-disable no-undef */
+      localStorage.setItem('athenum_' + this.storyName + '_player', JSON.stringify(this.Player))
+      localStorage.setItem('athenum_' + this.storyName + '_player', JSON.stringify(this.Player))
+      // Window.localStorage.athenum[this.storyName].Player = this.Player
+    },
+    loadGame () {
+      this.Player = JSON.parse(localStorage.getItem('athenum_' + this.storyName))
+      /* eslint-enable no-undef */
     }
   }
 }
@@ -165,6 +173,21 @@ body, html {
   font-family: 'Inconsolata', monospace;
   color: var(--lightest);
   background-color: var(--primary1);
+}
+
+#options-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#option-modal {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: var(--lighter);
 }
 
 .main-input {

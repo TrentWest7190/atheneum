@@ -138,7 +138,7 @@ const screenData = {
       {
         text: 'stat grow',
         events () {
-          this.Player.Stats.testStat.value = 10
+          this.Player.Stats.testStat += 10
         }
       }
     ]
