@@ -1,19 +1,44 @@
 <template>
   <div v-if="launchScreen" id="launch-screen" class="full-height col-flex">
-    <h1>{{Story.config.storyName}}</h1>
+    <h1>{{storyName}}</h1>
     <button id="start-button" @click="launchScreen = false">Start</button>
   </div>
   <div v-else id="app-container" class="full-height row-flex">
+    <button id="options-button" @click="showOptionModal = !showOptionModal">Options</button>
     <div class="bordered-box full-height col-md-3">
-      <debug-view class=" bordered-box full-height game-panel padding-container" :Story="Story" :Player="Player"></debug-view>
+      <debug-view
+        class=" bordered-box full-height game-panel padding-container"
+        :Player="Player"
+        :CurrentLocation="CurrentLocation"
+        :debug="debug"
+        @debugMove="loadLocation"
+        @debug="debugFunction"></debug-view>
     </div>
     <div class="bordered-box col-flex full-height col-md-6">
-      <text-view class="bordered-box col-md-8 text-view game-panel" :textArray="paragraphs" :hasMoreParagraphs="Player.additionalParagraphs.length > 0"></text-view>
-      <button-view v-if="buttons" class="bordered-box col-md-4" :buttonArray="buttons" @replaceButtons="replaceButtons"></button-view>
-      <input v-else class="bordered-box col-md-4 main-input" placeholder="Click here to type" @keyup.enter="scene.input.callback($event.target.value)">
+      <text-view
+        class="bordered-box col-md-8 text-view game-panel" 
+        :textArray="DisplayedText" 
+        :hasMoreParagraphs="AdditionalText.length > 0">
+      </text-view>
+      <button-view
+        v-if="true" 
+        class="bordered-box col-md-4" 
+        :buttonArray="DisplayedButtons" 
+        :inTree="TreeTraversal.length > 0" 
+        @doEvent="doEvent" 
+        @traverseUp="traverseUp"></button-view>
+      <input
+        v-else 
+        class="bordered-box col-md-4 main-input" 
+        placeholder="Click here to type" 
+        @keyup.enter="scene.input.callback($event.target.value)">
     </div>
     <div class="bordered-box full-height col-md-3">
-      <inventory-view class="bordered-box full-height game-panel" :Story="Story" :Player="Player"></inventory-view>
+      <inventory-view class="bordered-box full-height game-panel" :Player="Player"></inventory-view>
+    </div>
+    <div id="option-modal" v-if="showOptionModal">
+      <button @click="saveGame">Save Game</button>
+      <button @click="loadGame">Load Game</button>
     </div>
   </div>
 </template>
@@ -24,12 +49,12 @@ import ButtonView from './components/ButtonView'
 import DebugView from './components/DebugView'
 import InventoryView from './components/InventoryView'
 
-import TextEngine from './engine/TextEngine'
-import ButtonEngine from './engine/ButtonEngine'
+import _ from 'lodash'
+
+const Story = require('./stories/debug/Story.js')
 
 export default {
   name: 'app',
-  props: ['Story', 'Player'],
   components: {
     TextView,
     ButtonView,
@@ -39,36 +64,93 @@ export default {
 
   data () {
     return {
-      launchScreen: true
+      storyName: Story.storyName,
+      launchScreen: false,
+      Player: require('./stories/debug/Player.js'),
+      CurrentLocation: {},
+      AdditionalText: [],
+      TreeTraversal: [],
+      debug: {
+        screenData: Story.screenData
+      },
+      showOptionModal: false
     }
   },
 
   computed: {
-    scene () {
-      if (typeof this.Player.CurrentLocation === 'string') {
-        return this.Story.screenData[this.Player.CurrentLocation]
-      } else if (typeof this.Player.CurrentLocation === 'object') {
-        return this.Player.CurrentLocation
-      }
+    DisplayedText () {
+      return this.loadText(this.CurrentLocation.text)
     },
-    paragraphs () {
-      return TextEngine(this.scene.paragraphs, this.Story.textData, this.Player.additionalParagraphs, this.Player.paragraphOverride)
-    },
-
-    buttons () {
-      if (this.scene.buttons) {
-        return ButtonEngine(this.scene.buttons, this.Story.buttonData, this.Player.buttonOverride)
-      }
+    DisplayedButtons () {
+      return this.loadButtons(this.CurrentLocation.buttons)
     }
   },
 
+  created () {
+    this.loadLocation(Story.startScreen)
+  },
+
   methods: {
-    replaceButtons (children, orig) {
-      let newButtons = children
-      if (!newButtons._parent) {
-        Object.defineProperty(newButtons, '_parent', {value: orig})
+    loadText (textToLoad) {
+      let loadedText
+      if (typeof textToLoad === 'function') {
+        loadedText = textToLoad.call(this)
+      } else {
+        loadedText = textToLoad
       }
-      this.Player.buttonOverride = newButtons
+      return _.compact(loadedText.concat(this.AdditionalText).map(text => {
+        return typeof text === 'function' ? text.call(this) : text
+      }, this))
+    },
+    loadButtons (buttonsToLoad) {
+      let returnArray = []
+      if (typeof buttonsToLoad === 'function') {
+        returnArray = buttonsToLoad.call(this)
+      } else if (Array.isArray(buttonsToLoad)) {
+        returnArray = buttonsToLoad
+      }
+      return _.compact(returnArray)
+    },
+    doEvent (events) {
+      const returnButtons = events.call(this)
+      if (Array.isArray(returnButtons)) {
+        this.TreeTraversal.push(this.DisplayedButtons)
+        this.CurrentLocation.buttons = () => {
+          return returnButtons
+        }
+      } else if (typeof returnButtons === 'function') {
+        this.TreeTraversal.push(this.DisplayedButtons)
+        this.CurrentLocation.buttons = returnButtons
+      }
+    },
+    loadLocation (location) {
+      this.CurrentLocation = _.cloneDeep(location)
+      this.AdditionalText = []
+      this.TreeTraversal = []
+    },
+    traverseUp () {
+      this.CurrentLocation.buttons = () => {
+        return this.TreeTraversal.pop()
+      }
+    },
+    debugFunction ({type, name, value, isNumber}) {
+      if (type === 'inventory') {
+        this.Player.Inventory[name].amount = parseInt(value)
+      } else if (type === 'flags') {
+        this.Player.Flags[name] = isNumber ? parseInt(value) : value
+      } else if (type === 'stats') {
+        this.Player.Stats[name]._value = parseInt(value)
+      }
+    },
+    saveGame () {
+      /* eslint-disable no-undef */
+      localStorage.setItem('athenum_' + this.storyName + '_player', JSON.stringify(this.Player))
+      localStorage.setItem('athenum_' + this.storyName + '_player', JSON.stringify(this.Player))
+      // Window.localStorage.athenum[this.storyName].Player = this.Player
+    },
+    loadGame () {
+      this.Player = JSON.parse(localStorage.getItem('athenum_' + this.storyName))
+      /* eslint-enable no-undef */
     }
   }
 }
@@ -91,6 +173,21 @@ body, html {
   font-family: 'Inconsolata', monospace;
   color: var(--lightest);
   background-color: var(--primary1);
+}
+
+#options-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#option-modal {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: var(--lighter);
 }
 
 .main-input {

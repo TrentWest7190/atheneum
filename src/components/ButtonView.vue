@@ -1,7 +1,7 @@
 <template>
   <div class = "row-flex flex-wrap">
-    <button class="event-button" v-for="button in buttonArray" @click="handleEvents(button)">{{ button.text }}</button>
-    <button class="event-button" v-if="buttonArray._parent" @click="traverseUp(buttonArray._parent)">Back</button>
+    <button class="event-button" v-for="button in buttonArray" @click="$emit('doEvent', button.events)">{{ button.text }}</button>
+    <button class="event-button" v-if="inTree" @click="$emit('traverseUp')">Back</button>
   </div>
 </template>
 
@@ -9,21 +9,9 @@
 export default {
   name: 'button-view',
 
-  props: ['buttonArray'],
+  props: ['buttonArray', 'inTree'],
 
   methods: {
-    handleEvents (button) {
-      if (button.events) {
-        button.events()
-      }
-      if (button.children) {
-        this.$emit('replaceButtons', button.children, this.buttonArray)
-      }
-    },
-
-    traverseUp (parentButtons) {
-      this.$emit('replaceButtons', parentButtons)
-    }
   }
 }
 </script>
